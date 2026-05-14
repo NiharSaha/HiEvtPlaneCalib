@@ -1,0 +1,27 @@
+# Generated output directories (recreated by running the calibration)
+RescorTables/
+
+# ROOT files (large, generated — not tracked)
+*.root
+
+# SQLite DB files (large, generated)
+*.db
+
+# Log files
+*.log
+
+# Editor backup files
+*~
+*.bak
+
+# ROOT ACLiC compiled artifacts
+*.so
+*.pcm
+*.d
+
+# PDF output
+*.pdf
+
+# Python byte-compiled
+*.pyc
+__pycache__/

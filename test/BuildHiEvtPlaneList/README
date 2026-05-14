@@ -1,0 +1,29 @@
+The BuildHiEvtPlaneList program takes a .csv file that defines the
+desired event planes and generates the HiEvtPlaneList.h header file used in
+CMSSW.  It is expected that the .csv file will be
+generated using a spreadsheet program such as Excel or Numbers. 
+To use the modified event plane list it is necessary to
+check out RecoHI/HiEvtPlaneAlgos and replace the HiEvtPlaneList.h file located
+in the interface directory with the one generated here.  The column 
+definitions in the .csv file are as follows:
+
+Index     - Sequential index, starting with 0
+Name      - Name of event plane.  An enum is generated with this name.
+Detector  - Detector subcomponent used for EP:  HF/Tracker/RPD/Castor
+Order     - Harmonic order of the EP
+hmin1     - Pseudorapidity range hmin1 < eta < hmax1
+hmax1
+hmin2
+hmax2     - Add pseudorapidity range  hmin2 < eta < hmax2 
+minpt     - pt range (Tracker) or et range (HF, RPD, Castor) minpt to maxpt  
+maxpt
+nsub      - Determine EP resolution using 2 (2sub) or 3 (3sub)  subevents
+mcw       - Flag for applying momentum conserving weight (1st order, only)
+rmate1    - EP used for EP resolution (2sub and 3sub)
+rmate2    - Additional EP used for EP resolution (3sub)
+
+A hardcoded limit of 50 event planes exists. 
+To define more than 50 event planes  it is necessary to modify 
+CondFormats/HIObjects/interface/RPFlatParams.h.  
+(All occurrences of 50 need to be changed to the desired maximum number
+of event planes.)
