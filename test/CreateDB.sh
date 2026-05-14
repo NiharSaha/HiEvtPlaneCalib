@@ -199,6 +199,16 @@ echo $epfile
 arg='EPCalib/EPCalib.C+('$calibrunmin','$calibrunmax',"tmphi.lis","'$tmpfile'","'$epfile'","'$offfile'","'$resdir'")'
 echo $arg
 root -l -b -q $arg
+# Sanity check: verify EPtree was written to the ep file
+eptree_check=$(root -l -b -q -e "TFile *f=TFile::Open(\"$epfile\"); if(!f||f->IsZombie()){cout<<\"FAIL\"<<endl;exit(1);}TTree*t=(TTree*)f->Get(\"EPtree\");if(!t){cout<<\"FAIL\"<<endl;exit(1);}cout<<\"OK \"<<t->GetEntries()<<endl;" 2>/dev/null | grep -E "^OK|^FAIL")
+if [[ "$eptree_check" != OK* ]]; then
+    echo "ERROR: EPCalib.C did not produce a valid EPtree in $epfile"
+    echo "       Possible cause: calibrunmin/calibrunmax ($calibrunmin/$calibrunmax) filtered out all events."
+    echo "       For MC (run=1): use calibrunmin=0 calibrunmax=999999"
+    echo "       Check that calib.root exists and contains events in the run range."
+    exit 1
+fi
+echo ">> EPtree check passed: $eptree_check entries"
 echo ">>The following files/directories should now have been created:"
 echo $resdir'   -- Directory containing the event plane resolutions'
 echo $rpflat'   -- File with results of the flattening operation'
