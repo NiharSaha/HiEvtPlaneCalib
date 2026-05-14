@@ -59,21 +59,22 @@ cmsenv
 
 Two packages are required:
 
-| Package | Purpose |
+| Package | Source |
 |---|---|
-| `HeavyIonsAnalysis/HiEvtPlaneCalib` | Calibration tree producer, DB writer, check module |
-| `RecoHI/HiEvtPlaneAlgos` | Core EP reconstruction algorithms and `HiEvtPlaneList.h` |
+| `HeavyIonsAnalysis/HiEvtPlaneCalib` | GitHub: [NiharSaha/HiEvtPlaneCalib](https://github.com/NiharSaha/HiEvtPlaneCalib) |
+| `RecoHI/HiEvtPlaneAlgos` | Official CMSSW repository |
 
-> **Important:** `HeavyIonsAnalysis/HiEvtPlaneCalib` is **not** part of the official CMSSW
-> repository and is **not publicly hosted on GitHub**.
-> Running `git cms-addpkg HeavyIonsAnalysis/HiEvtPlaneCalib` will fail.
-> The package is distributed directly by the EP calibration group (S. Sanders, U. Kansas).
-> Copy it from an existing checkout as shown below.
+> **Note:** `HeavyIonsAnalysis/HiEvtPlaneCalib` is **not** part of the official CMSSW
+> repository. `git cms-addpkg` will fail for it. Clone it directly from GitHub as shown below.
 
 ```bash
-# 1. Copy HeavyIonsAnalysis/HiEvtPlaneCalib from an existing working area
-#    (replace the source path with wherever you received the package)
-cp -r /path/to/existing/CMSSW_14_1_0/src/HeavyIonsAnalysis $CMSSW_BASE/src/
+cd $CMSSW_BASE/src
+
+# 1. Clone HiEvtPlaneCalib into the correct CMSSW package path
+mkdir -p HeavyIonsAnalysis
+git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
+# OR use HTTPS if you don't have an SSH key set up:
+# git clone https://github.com/NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 
 # 2. Check out RecoHI/HiEvtPlaneAlgos from the official CMSSW repo
 #    (this package IS in the official repo — git cms-addpkg works here)
@@ -83,7 +84,6 @@ git config --global user.name 'Firstname Lastname'
 git config --global user.email 'your.email@cern.ch'
 git config --global user.github your_github_username
 
-cd $CMSSW_BASE/src
 git cms-init
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
 ```
