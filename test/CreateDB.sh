@@ -279,6 +279,6 @@ $COM
 calibFile=$defloc"/calib.root"
 moveFile=$epfile
 checkFile=$defloc"/checkep.root"
-root -l -b -q  'compare.C("'$calibFile'","'$moveFile'","'$checkFile'")'
+root -l -b -q  'compare.C("'$calibFile'","'$moveFile'","'$checkFile'","'$inputtype'")'
 #[ -f $epfile ] && rm $epfile
 

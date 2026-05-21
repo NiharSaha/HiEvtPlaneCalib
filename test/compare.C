@@ -1,5 +1,5 @@
 
-void compare(string calibFile, string moveFile, string checkFile) {
+void compare(string calibFile, string moveFile, string checkFile, string inputType = "MC") {
   TFile *calib = new TFile(calibFile.data(), "r");
   TFile *mo = new TFile(moveFile.data(), "r");
   TFile *test = new TFile(checkFile.data(), "r");
@@ -38,5 +38,6 @@ void compare(string calibFile, string moveFile, string checkFile) {
   cout << "calib: " << hcalibcbin->Integral(1, 1000) << endl;
   cout << "move:  " << hmovecbin->Integral(1, 1000) << endl;
   cout << "test:  " << htestcbin->Integral(1, 1000) << endl;
-  c->Print("checkPlot.pdf", "pdf");
+  string outpdf = "checkPlot_" + inputType + ".pdf";
+  c->Print(outpdf.data(), "pdf");
 }
