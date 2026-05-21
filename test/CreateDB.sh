@@ -167,6 +167,24 @@ else
 	calibrunmin=387853   # 2024 PbPb real data run range
 	calibrunmax=388784
 fi
+# Pre-check: verify calib.root has events in the expected run range
+echo ">> Pre-check: verifying calib.root has events in run range [$calibrunmin, $calibrunmax]..."
+calib_nev=$(root -l -b -q -e "TFile *f=TFile::Open(\"$calfile\"); if(!f||f->IsZombie()){cout<<\"NOFILE\"<<endl;exit(1);} TTree *t=(TTree*)f->Get(\"evtPlaneCalibTree/tree\"); if(!t){cout<<\"NOTREE\"<<endl;exit(1);} cout<<t->GetEntries(\"Run>=$calibrunmin&&Run<=$calibrunmax\")<<endl;" 2>/dev/null | grep -E "^[0-9]+|^NOFILE|^NOTREE" | tail -1)
+if [ "$calib_nev" = "NOFILE" ]; then
+    echo "ERROR: Cannot open $calfile. Please run Step 1 first."
+    exit 1
+elif [ "$calib_nev" = "NOTREE" ]; then
+    echo "ERROR: $calfile does not contain tree 'evtPlaneCalibTree/tree'."
+    exit 1
+elif [ -z "$calib_nev" ] || [ "$calib_nev" = "0" ]; then
+    echo "ERROR: calib.root has no events with Run in [$calibrunmin, $calibrunmax]."
+    if [ "$inputtype" = "Data" ]; then
+        echo "       You selected inputType=Data but calib.root likely contains MC events (run=1)."
+        echo "       Solution: re-run Step 1 with inputType=Data, or select inputType=MC."
+    fi
+    exit 1
+fi
+echo ">> calib.root pre-check OK: $calib_nev events in run range [$calibrunmin, $calibrunmax]"
 nbreaks=${#list[@]}
 echo $nbreaks
 for (( i=0; i<${nbreaks}-1; i++));
