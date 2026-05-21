@@ -9,7 +9,7 @@ config = Configuration()
 # Set inputType to 'MC' or 'Data'
 inputType = 'MC'   # <-- change to 'Data' for real 2024 PbPb calibration
 
-user        = 'ssanders'          # your CMS username
+user        = 'nsaha'             # your CMS username
 storagesite = 'T2_US_Vanderbilt'  # a T2 you have write access to
 store       = 'MiniAOD_calib'
 work        = 'crab_projects'
@@ -19,11 +19,8 @@ if inputType == 'Data':
     # 2024 PbPb HIRun2024A certified run range: 387853-388784
     dataset   = '/HIPhysicsRawPrime0/HIRun2024A-PromptReco-v1/MINIAOD'
     runRange  = '387853-388784'
-    # Golden JSON for certified runs — update path to the latest version:
-    #   /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions24/HI/
-    # Uncomment and set the correct path before submitting for production:
-    # lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions24/HI/DCSOnly/json_DCSONLY.txt'
-    lumiMask  = None   # replace None with the golden JSON path above
+    # Golden JSON for 2024 PbPb HIRun2024A (runs 387853-388784)
+    lumiMask  = '/eos/user/c/cmsdqm/www/CAF/certification/Collisions24HI/Cert_Collisions2024_HI_387853_388784_Golden.json'
 else:
     # 2024 PbPb MC: Hydjet MinBias MiniAODSIM
     dataset   = '/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter24MiniAOD-NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/MINIAODSIM'
