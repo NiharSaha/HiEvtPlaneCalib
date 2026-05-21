@@ -89,7 +89,7 @@ if ivars.aodType == 'MiniAOD':
     if ivars.inputType == 'Data':
         # 2024 PbPb real data: HIRun2024A HIPhysicsRawPrime0 MINIAOD PromptReco-v1
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/749/00000/f26d9cb3-f878-4136-b2d3-ae669e445d4a.root'
+            '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/853/00000/3b1c9ce6-fd74-4ccc-8940-65be089adf5b.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',
