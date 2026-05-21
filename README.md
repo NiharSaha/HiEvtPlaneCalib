@@ -95,9 +95,12 @@ git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPl
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
 git checkout cmshi/forest_CMSSW_14_1_X -- HeavyIonsAnalysis/EventAnalysis
+# The checkout stages EventAnalysis files — commit them before step 3
+git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_14_1_X"
 
 # 3. Check out RecoHI/HiEvtPlaneAlgos from the official CMSSW repo
 #    (this package IS in the official repo — git cms-addpkg works here)
+#    git cms-addpkg fails if there are staged but uncommitted changes, hence the commit above
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
 ```
 
