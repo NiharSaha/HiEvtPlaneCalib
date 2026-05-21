@@ -68,7 +68,9 @@ Three packages are required:
 > **Note:** Neither `HeavyIonsAnalysis/HiEvtPlaneCalib` nor `HeavyIonsAnalysis/EventAnalysis`
 > is part of the official CMSSW repository. `git cms-addpkg` will fail for both.
 > `HiEvtPlaneCalib` is cloned directly from GitHub; `EventAnalysis` is sparse-checked out
-> from the CmsHI community fork.
+> from the `forest_CMSSW_14_1_X` branch of the CmsHI/cmssw fork.
+> If you are using a different CMSSW version, replace `forest_CMSSW_14_1_X` with the
+> corresponding branch name (e.g. `forest_CMSSW_X_Y_Z` for version X.Y.Z).
 
 ```bash
 cd $CMSSW_BASE/src
@@ -79,8 +81,9 @@ git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPl
 # OR use HTTPS if you don't have an SSH key set up:
 # git clone https://github.com/NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 
-# 2. Check out HeavyIonsAnalysis/EventAnalysis from the CmsHI community fork
+# 2. Check out HeavyIonsAnalysis/EventAnalysis from the forest_CMSSW_14_1_X branch
 #    (provides HLT filters and collision event selections used in calibtree_cfg.py / checkep_cfg.py)
+#    NOTE: if using a different CMSSW version, change forest_CMSSW_14_1_X to forest_CMSSW_X_Y_Z
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
 git checkout cmshi/forest_CMSSW_14_1_X -- HeavyIonsAnalysis/EventAnalysis
