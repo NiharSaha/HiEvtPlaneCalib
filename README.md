@@ -75,6 +75,14 @@ Three packages are required:
 ```bash
 cd $CMSSW_BASE/src
 
+# 0. Initialise the CMSSW sparse-checkout git repository
+#    MUST be run first — before cloning any packages — on a fresh area.
+#    Configure git identity if not already set (only needed once per machine):
+git config --global user.name 'Firstname Lastname'
+git config --global user.email 'your.email@cern.ch'
+git config --global user.github your_github_username
+git cms-init
+
 # 1. Clone HiEvtPlaneCalib into the correct CMSSW package path
 mkdir -p HeavyIonsAnalysis
 git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
@@ -90,13 +98,6 @@ git checkout cmshi/forest_CMSSW_14_1_X -- HeavyIonsAnalysis/EventAnalysis
 
 # 3. Check out RecoHI/HiEvtPlaneAlgos from the official CMSSW repo
 #    (this package IS in the official repo — git cms-addpkg works here)
-
-# Configure git identity (required by git cms-init; only needed once per machine)
-git config --global user.name 'Firstname Lastname'
-git config --global user.email 'your.email@cern.ch'
-git config --global user.github your_github_username
-
-git cms-init
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
 ```
 
