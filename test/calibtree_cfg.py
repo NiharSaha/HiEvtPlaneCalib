@@ -40,10 +40,8 @@ process.load('Configuration.StandardSequences.GeometryDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-#process.load("HeavyIonsAnalysis.Configuration.hfCoincFilter_cff")
-#process.load("HeavyIonsAnalysis.Configuration.analysisFilters_cff")
-#process.load("HeavyIonsAnalysis.Configuration.collisionEventSelection_cff")
-#process.load("HeavyIonsAnalysis.HiEvtPlaneCalib.checkflattening_cfi")
+process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
+process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
 process.load("RecoHI.HiEvtPlaneAlgos.HiEvtPlane_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.EvtPlaneFilter_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.hiEvtPlaneFlat_cfi")
@@ -63,16 +61,19 @@ process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
 process.centralityBin.centralityVariable = cms.string("HFtowers")
 
-#process.load('HeavyIonsAnalysis.Configuration.hfCoincFilter_cff')
-#process.load('HeavyIonsAnalysis.Configuration.collisionEventSelection_cff')
-process.load('RecoHI.HiCentralityAlgos.CentralityFilter_cfi')
-
-#process.eventSelection = cms.Sequence(
-#	process.primaryVertexFilter
-#    )
+from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+process.hltFilter = hltHighLevel.clone(
+    HLTPaths = ["HLT_HIMinimumBias*"]
+)
+process.HLT_filters = cms.Sequence(process.hltFilter)
+process.event_filters = cms.Sequence(
+    process.primaryVertexFilter *
+    process.clusterCompatibilityFilter *
+    process.phfCoincFilterPF3Th5
+)
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 
 if ivars.aodType == 'testMiniAOD':
@@ -152,6 +153,9 @@ process.evtPlaneCalibTree.cutEra = process.hiEvtPlane.cutEra
 process.hiEvtPlane.loadDB = cms.bool(False)
 
 if ivars.aodType == 'testMiniAOD' or ivars.aodType == 'MiniAOD':
-    process.p = cms.Path(process.centralityBin*process.hiEvtPlane * process.evtPlaneCalibTree  )
+    if ivars.inputType == 'Data':
+        process.p = cms.Path(process.HLT_filters * process.event_filters * process.centralityBin * process.hiEvtPlane * process.evtPlaneCalibTree)
+    else:
+        process.p = cms.Path(process.event_filters * process.centralityBin * process.hiEvtPlane * process.evtPlaneCalibTree)
 
 

@@ -50,10 +50,8 @@ process.load('Configuration.StandardSequences.GeometryDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
-#if ivars.aodType == 'AOD':
-#	process.load("HeavyIonsAnalysis.Configuration.hfCoincFilter_cff")
-#	process.load("HeavyIonsAnalysis.Configuration.analysisFilters_cff")
-#	process.load("HeavyIonsAnalysis.Configuration.collisionEventSelection_cff")
+process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
+process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
 
 process.load("HeavyIonsAnalysis.HiEvtPlaneCalib.checkflattening_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.HiEvtPlane_cfi")
@@ -76,11 +74,17 @@ process.centralityBin.centralityVariable = cms.string("HFtowers")
 
 #process.load('HeavyIonsAnalysis.Configuration.hfCoincFilter_cff')
 #process.load('HeavyIonsAnalysis.Configuration.collisionEventSelection_cff')
-process.load('RecoHI.HiCentralityAlgos.CentralityFilter_cfi')
 
-#process.eventSelection = cms.Sequence(
-#		process.primaryVertexFilter
-#    )
+from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+process.hltFilter = hltHighLevel.clone(
+    HLTPaths = ["HLT_HIMinimumBias*"]
+)
+process.HLT_filters = cms.Sequence(process.hltFilter)
+process.event_filters = cms.Sequence(
+    process.primaryVertexFilter *
+    process.clusterCompatibilityFilter *
+    process.phfCoincFilterPF3Th5
+)
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.MessageLogger.cerr.FwkReport.reportEvery=100
@@ -112,7 +116,7 @@ elif ivars.aodType == 'MiniAOD':
     if ivars.inputType == 'Data':
         # 2024 PbPb real data: HIRun2024A HIPhysicsRawPrime0 MINIAOD PromptReco-v1
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/749/00000/f26d9cb3-f878-4136-b2d3-ae669e445d4a.root'
+            '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/853/00000/3b1c9ce6-fd74-4ccc-8940-65be089adf5b.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',
@@ -173,5 +177,8 @@ process.checkflattening.caloCentRefWidth=process.hiEvtPlane.caloCentRefWidth
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 
 if ivars.aodType == 'testMiniAOD' or ivars.aodType == 'MiniAOD':
-    process.p = cms.Path(process.hiEvtPlane*process.hiEvtPlaneFlat*process.checkflattening)
+    if ivars.inputType == 'Data':
+        process.p = cms.Path(process.HLT_filters * process.event_filters * process.hiEvtPlane * process.hiEvtPlaneFlat * process.checkflattening)
+    else:
+        process.p = cms.Path(process.event_filters * process.hiEvtPlane * process.hiEvtPlaneFlat * process.checkflattening)
 
