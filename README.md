@@ -94,17 +94,34 @@ git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPl
 #    NOTE: if using a different CMSSW version, change forest_CMSSW_14_1_X to forest_CMSSW_X_Y_Z
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
-git checkout cmshi/forest_CMSSW_14_1_X -- HeavyIonsAnalysis/EventAnalysis
-# NOTE: the 'git checkout ... --' form copies files AND stages them automatically.
-# git cms-addpkg (step 3) requires a clean staging area and will fail with
-# "there are staged but not committed changes" if you skip this commit.
-# This is just a local commit inside the CMSSW sparse-checkout repo — it does
-# NOT push anything to GitHub and has no effect on HiEvtPlaneCalib.
-git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_14_1_X"
 
-# 3. Check out RecoHI/HiEvtPlaneAlgos from the official CMSSW repo
-#    (this package IS in the official repo — git cms-addpkg works here)
+# Recommended ordering (important):
+# `git cms-addpkg` can rewrite the sparse-checkout and update the worktree
+# which may remove files you added earlier from a different remote/branch.
+# To avoid this, add official CMSSW packages first, then bring in the
+# community fork package. Example (recommended):
+#
+# 1) Add the official package from the release (run inside $CMSSW_BASE/src):
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
+#
+# 2) Then add `EventAnalysis` from the CmsHI fork:
+#    (use FETCH_HEAD from the prior fetch to avoid creating extra refs)
+git checkout FETCH_HEAD -- HeavyIonsAnalysis/EventAnalysis
+git add HeavyIonsAnalysis/EventAnalysis
+git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_14_1_X"
+scram b -j8
+#
+# Alternate (no-commit) approach: clone the fork separately and copy the
+# package into the sparse area if you prefer not to commit into the CMSSW repo:
+#
+#    git clone --depth 1 --branch forest_CMSSW_14_1_X https://github.com/CmsHI/cmssw.git /tmp/cmshi
+#    cp -r /tmp/cmshi/HeavyIonsAnalysis/EventAnalysis $CMSSW_BASE/src/HeavyIonsAnalysis/EventAnalysis
+#    rm -rf /tmp/cmshi
+#    # then build
+#    scram b -j8
+
+# If EventAnalysis disappeared after running `git cms-addpkg`, restore it
+# with the steps above (add RecoHI first, then checkout EventAnalysis and commit).
 ```
 
 ---
