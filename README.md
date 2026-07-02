@@ -417,5 +417,5 @@ After making such a change, always copy the updated `HiEvtPlaneList.h` and
 
 | Type | DAS dataset path |
 |---|---|
-| **2024 PbPb Data** | `/HIPhysicsRawPrime0/HIRun2024A-PromptReco-v1/MINIAOD` |
+| **2024 PbPb Data** | `/HIPhysicsRawPrime*/HIRun2024*-PromptReco-v*/MINIAOD` |
 | **2024 PbPb MC** | `/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter24MiniAOD-NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/MINIAODSIM` |
