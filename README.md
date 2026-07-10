@@ -3,7 +3,10 @@
 **CMSSW:** 14_1_0  
 **Package:** `HeavyIonsAnalysis/HiEvtPlaneCalib`  
 **Run range (2024 PbPb data):** 387853 – 388784<br>
-**EP writeup Run2:** https://twiki.cern.ch/twiki/pub/CMS/SWGuideHeavyIonFlatEvtPlane/EPWriteup.pdf
+**EP writeup Run2:** https://twiki.cern.ch/twiki/pub/CMS/SWGuideHeavyIonFlatEvtPlane/EPWriteup.pdf  
+**Run2 setup (AOD):** https://github.com/ssanders50/PbPb_2018  
+**Run2 setup (miniAOD):** https://github.com/ssanders50/CheckEP_11_2_3  
+
 
 ---
 
