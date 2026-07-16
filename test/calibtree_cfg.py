@@ -2,10 +2,13 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 import os
 import sys
+import FWCore.ParameterSet.Config as cms
+from Configuration.Eras.Era_Run3_pp_on_PbPb_2024_cff import Run3_pp_on_PbPb_2024
+
 ivars = VarParsing.VarParsing('analysis')
 
 ivars.register('outfile',
-               'calibMC.root',
+               'calib.root',
 		VarParsing.VarParsing.multiplicity.singleton,
 		VarParsing.VarParsing.varType.string,
                 "output file name")
@@ -23,7 +26,7 @@ ivars.register ('repFile',
                 info="Data file to be replayed. Null if crab submission.")
 
 ivars.register ('inputType',
-                'MC',
+                'Data',
                 mult=ivars.multiplicity.singleton,
                 mytype=ivars.varType.string,
                 info="MC or Data: selects which input files to use for MiniAOD mode")
@@ -31,7 +34,15 @@ ivars.register ('inputType',
 
 ivars.parseArguments()
 
-process = cms.Process("FlatCalib")
+if ivars.outfile == 'calib.root':  # still at default -> not user-overridden
+    if ivars.inputType == 'Data':
+        ivars.outfile = 'calibData.root'
+    else:
+        ivars.outfile = 'calibMC.root'
+
+        
+process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2024)
+#process = cms.Process("FlatCalib")
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("CondCore.CondDB.CondDB_cfi")
@@ -40,8 +51,14 @@ process.load('Configuration.StandardSequences.GeometryDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+
+process.load('HeavyIonsAnalysis.EventAnalysis.skimanalysis_cfi')
 process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
 process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
+process.load('HeavyIonsAnalysis.EventAnalysis.clusterCompatibilityFilter_cfi')
+process.load('HeavyIonsAnalysis.EventAnalysis.hievtanalyzer_data_cfi')
+process.load('HeavyIonsAnalysis.EventAnalysis.hltanalysis_cfi')
+
 process.load("RecoHI.HiEvtPlaneAlgos.HiEvtPlane_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.EvtPlaneFilter_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.hiEvtPlaneFlat_cfi")

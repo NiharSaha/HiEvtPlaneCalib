@@ -138,10 +138,10 @@ string ressaveName;
 #include "src/rescor.h"
 void EPCalib(unsigned int minRun = 0,
              unsigned int maxRun = 500000,
-             string inList = "tmp.lis",
-             string ssave = "/resfs/sanders/MiniAOD_calib/tmpMC",
-             string epsave = "/resfs/sanders/MiniAOD_calib/EPMC.root",
-             string foffsave = "/resfs/sanders/MiniAOD_calib/foff.root",
+             string inList = "input_files_HIMB0.lis",
+             string ssave = "./tmp_HIMB0.root",
+             string epsave = "./ep_HIMB0.root",
+             string foffsave = "./offset_HIMB0.root",
              string ressave = "Rescor") {
   TH1I *runchk = NULL;
   saveName = ssave;
