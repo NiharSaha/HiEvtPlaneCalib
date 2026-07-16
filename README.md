@@ -1,8 +1,8 @@
-# Event Plane Calibration for 2024 PbPb — Step-by-Step Guide
+# Event Plane Calibration for 2023 PbPb — Step-by-Step Guide
 
-**CMSSW:** 14_1_0  
+**CMSSW:** 13_2_11  
 **Package:** `HeavyIonsAnalysis/HiEvtPlaneCalib`  
-**Run range (2024 PbPb data):** 387853 – 388784<br>
+**Run range (2023 PbPb data):** <br>
 **EP writeup Run2:** https://twiki.cern.ch/twiki/pub/CMS/SWGuideHeavyIonFlatEvtPlane/EPWriteup.pdf  
 **Run2 setup (AOD):** https://github.com/ssanders50/PbPb_2018  
 **Run2 setup (miniAOD):** https://github.com/ssanders50/CheckEP_11_2_3  
