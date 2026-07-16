@@ -2,7 +2,11 @@
 
 **CMSSW:** 14_1_0  
 **Package:** `HeavyIonsAnalysis/HiEvtPlaneCalib`  
-**Run range (2024 PbPb data):** 387853 – 388784  
+**Run range (2024 PbPb data):** 387853 – 388784<br>
+**EP writeup Run2:** https://twiki.cern.ch/twiki/pub/CMS/SWGuideHeavyIonFlatEvtPlane/EPWriteup.pdf  
+**Run2 setup (AOD):** https://github.com/ssanders50/PbPb_2018  
+**Run2 setup (miniAOD):** https://github.com/ssanders50/CheckEP_11_2_3  
+
 
 ---
 
@@ -86,42 +90,14 @@ git cms-init
 # 1. Clone HiEvtPlaneCalib into the correct CMSSW package path
 mkdir -p HeavyIonsAnalysis
 git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
-# OR use HTTPS if you don't have an SSH key set up:
-# git clone https://github.com/NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
-
-# 2. Check out HeavyIonsAnalysis/EventAnalysis from the forest_CMSSW_14_1_X branch
-#    (provides HLT filters and collision event selections used in calibtree_cfg.py / checkep_cfg.py)
-#    NOTE: if using a different CMSSW version, change forest_CMSSW_14_1_X to forest_CMSSW_X_Y_Z
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
-
-# Recommended ordering (important):
-# `git cms-addpkg` can rewrite the sparse-checkout and update the worktree
-# which may remove files you added earlier from a different remote/branch.
-# To avoid this, add official CMSSW packages first, then bring in the
-# community fork package. Example (recommended):
-#
-# 1) Add the official package from the release (run inside $CMSSW_BASE/src):
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
-#
-# 2) Then add `EventAnalysis` from the CmsHI fork:
-#    (use FETCH_HEAD from the prior fetch to avoid creating extra refs)
 git checkout FETCH_HEAD -- HeavyIonsAnalysis/EventAnalysis
 git add HeavyIonsAnalysis/EventAnalysis
 git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_14_1_X"
 scram b -j8
-#
-# Alternate (no-commit) approach: clone the fork separately and copy the
-# package into the sparse area if you prefer not to commit into the CMSSW repo:
-#
-#    git clone --depth 1 --branch forest_CMSSW_14_1_X https://github.com/CmsHI/cmssw.git /tmp/cmshi
-#    cp -r /tmp/cmshi/HeavyIonsAnalysis/EventAnalysis $CMSSW_BASE/src/HeavyIonsAnalysis/EventAnalysis
-#    rm -rf /tmp/cmshi
-#    # then build
-#    scram b -j8
 
-# If EventAnalysis disappeared after running `git cms-addpkg`, restore it
-# with the steps above (add RecoHI first, then checkout EventAnalysis and commit).
 ```
 
 ---
@@ -444,5 +420,5 @@ After making such a change, always copy the updated `HiEvtPlaneList.h` and
 
 | Type | DAS dataset path |
 |---|---|
-| **2024 PbPb Data** | `/HIPhysicsRawPrime0/HIRun2024A-PromptReco-v1/MINIAOD` |
+| **2024 PbPb Data** | `/HIPhysicsRawPrime*/HIRun2024*-PromptReco-v*/MINIAOD` |
 | **2024 PbPb MC** | `/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter24MiniAOD-NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/MINIAODSIM` |
