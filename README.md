@@ -32,7 +32,7 @@
 ## Prerequisites
 
 - Access to CERN computing infrastructure (lxplus or equivalent)
-- CMSSW 14_1_0 environment (scram arch `el9_amd64_gcc12` or the equivalent for your platform)
+- CMSSW 13_2_11 environment (scram arch `el9_amd64_gcc12` or the equivalent for your platform)
 - Valid CMS VOMS proxy (`voms-proxy-init -voms cms`) — needed for any step that reads from CMS DAS / xrootd
 - CRAB3 client (for large-scale Steps 1 and 4)
 - `conddb_import` available in the CMSSW environment
@@ -49,13 +49,13 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=el9_amd64_gcc12
 
 # Create and initialise a fresh CMSSW release
-cmsrel CMSSW_14_1_0
-cd CMSSW_14_1_0/src
+cmsrel CMSSW_13_2_11
+cd CMSSW_13_2_11/src
 cmsenv
 ```
 
 > **Note:** If you are using an existing release (as in this repository), simply `cd` to
-> `CMSSW_14_1_0/src` and run `cmsenv` — do **not** re-run `cmsrel`.
+> `CMSSW_13_2_11/src` and run `cmsenv` — do **not** re-run `cmsrel`.
 
 ---
 
@@ -66,14 +66,14 @@ Three packages are required:
 | Package | Source |
 |---|---|
 | `HeavyIonsAnalysis/HiEvtPlaneCalib` | GitHub: [NiharSaha/HiEvtPlaneCalib](https://github.com/NiharSaha/HiEvtPlaneCalib) |
-| `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_14_1_X` |
+| `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_13_2_X` |
 | `RecoHI/HiEvtPlaneAlgos` | Official CMSSW repository |
 
 > **Note:** Neither `HeavyIonsAnalysis/HiEvtPlaneCalib` nor `HeavyIonsAnalysis/EventAnalysis`
 > is part of the official CMSSW repository. `git cms-addpkg` will fail for both.
 > `HiEvtPlaneCalib` is cloned directly from GitHub; `EventAnalysis` is sparse-checked out
-> from the `forest_CMSSW_14_1_X` branch of the CmsHI/cmssw fork.
-> If you are using a different CMSSW version, replace `forest_CMSSW_14_1_X` with the
+> from the `forest_CMSSW_13_2_X` branch of the CmsHI/cmssw fork.
+> If you are using a different CMSSW version, replace `forest_CMSSW_13_2_X` with the
 > corresponding branch name (e.g. `forest_CMSSW_X_Y_Z` for version X.Y.Z).
 
 ```bash
@@ -91,11 +91,11 @@ git cms-init
 mkdir -p HeavyIonsAnalysis
 git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 git remote add cmshi https://github.com/CmsHI/cmssw.git
-git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
+git fetch cmshi forest_CMSSW_13_2_X --no-tags --depth=1
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
 git checkout FETCH_HEAD -- HeavyIonsAnalysis/EventAnalysis
 git add HeavyIonsAnalysis/EventAnalysis
-git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_14_1_X"
+git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_13_2_X"
 scram b -j8
 
 ```
