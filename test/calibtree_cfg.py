@@ -2,6 +2,9 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 import os
 import sys
+import FWCore.ParameterSet.Config as cms
+from Configuration.Eras.Era_Run3_pp_on_PbPb_2023_cff import Run3_pp_on_PbPb_2023
+
 ivars = VarParsing.VarParsing('analysis')
 
 ivars.register('outfile',
@@ -23,7 +26,7 @@ ivars.register ('repFile',
                 info="Data file to be replayed. Null if crab submission.")
 
 ivars.register ('inputType',
-                'MC',
+                'Data',
                 mult=ivars.multiplicity.singleton,
                 mytype=ivars.varType.string,
                 info="MC or Data: selects which input files to use for MiniAOD mode")
@@ -31,7 +34,13 @@ ivars.register ('inputType',
 
 ivars.parseArguments()
 
-process = cms.Process("FlatCalib")
+if ivars.outfile == 'calib.root':  # still at default -> not user-overridden
+    if ivars.inputType == 'Data':
+        ivars.outfile = 'calibData.root'
+    else:
+        ivars.outfile = 'calibMC.root'
+
+process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2023)
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("CondCore.CondDB.CondDB_cfi")
@@ -41,20 +50,18 @@ process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
-process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
+process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
 process.load("RecoHI.HiEvtPlaneAlgos.HiEvtPlane_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.EvtPlaneFilter_cfi")
 process.load("RecoHI.HiEvtPlaneAlgos.hiEvtPlaneFlat_cfi")
 process.load("HeavyIonsAnalysis.HiEvtPlaneCalib.evtplanecalibtree_cfi")
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-# Select global tag based on inputType:
-#   Data: 141X_dataRun3_Prompt_forHI_NominalCentrality
-#   MC:   141X_mcRun3_2024_realistic_HI_v16
+
 if ivars.inputType == 'Data':
-    process.GlobalTag = GlobalTag(process.GlobalTag, '141X_dataRun3_Prompt_forHI_NominalCentrality', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, '132X_dataRun3_Prompt_v7', '')
 else:
-    process.GlobalTag = GlobalTag(process.GlobalTag, '141X_mcRun3_2024_realistic_HI_v16', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, '132X_mcRun3_2023_realistic_HI_v10', '')
 
 process.load('RecoHI.HiCentralityAlgos.HiCentrality_cfi')
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
@@ -69,7 +76,7 @@ process.HLT_filters = cms.Sequence(process.hltFilter)
 process.event_filters = cms.Sequence(
     process.primaryVertexFilter *
     process.clusterCompatibilityFilter *
-    process.phfCoincFilterPF3Th5
+    process.phfCoincFilter2Th4
 )
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
@@ -90,7 +97,7 @@ if ivars.aodType == 'MiniAOD':
     if ivars.inputType == 'Data':
         # 2024 PbPb real data: HIRun2024A HIPhysicsRawPrime0 MINIAOD PromptReco-v1
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/853/00000/3b1c9ce6-fd74-4ccc-8940-65be089adf5b.root'
+            '/store/hidata/HIRun2023A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v2/000/374/668/00000/119881a4-1fdd-4462-818e-55b3ab3962f5.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',
@@ -100,10 +107,7 @@ if ivars.aodType == 'MiniAOD':
     else:  # MC
         # 2024 PbPb MC: Hydjet MinBias MiniAODSIM (HINPbPbWinter24, 5.36 TeV)
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/6b0edb76-0f4e-49e4-a8b4-7d614b72e92f.root',
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/00e1cc61-b738-47ce-8d89-e0e1a7290212.root',
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/04840c4e-7732-4846-bbbd-4940bfdcb8cd.root',
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/1230138a-d4f6-4828-a2f7-adf024d0d190.root'
+            '/store/user/sarteaga/MinBias_PbPb_5p36TeV_Hydjet_v1/MinBias_PbPb_5p36TeV_Hydjet_RECODEBUG_v5/231023_223729/0000/stepRECO_1.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',
