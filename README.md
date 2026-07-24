@@ -67,14 +67,9 @@ Three packages are required:
 |---|---|
 | `HeavyIonsAnalysis/HiEvtPlaneCalib` | GitHub: [NiharSaha/HiEvtPlaneCalib](https://github.com/NiharSaha/HiEvtPlaneCalib) |
 | `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_13_2_X` |
-| `RecoHI/HiEvtPlaneAlgos` | Official CMSSW repository |
+| `RecoHI/HiEvtPlaneAlgos` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_13_2_X` |
 
-> **Note:** Neither `HeavyIonsAnalysis/HiEvtPlaneCalib` nor `HeavyIonsAnalysis/EventAnalysis`
-> is part of the official CMSSW repository. `git cms-addpkg` will fail for both.
-> `HiEvtPlaneCalib` is cloned directly from GitHub; `EventAnalysis` is sparse-checked out
-> from the `forest_CMSSW_13_2_X` branch of the CmsHI/cmssw fork.
-> If you are using a different CMSSW version, replace `forest_CMSSW_13_2_X` with the
-> corresponding branch name (e.g. `forest_CMSSW_X_Y_Z` for version X.Y.Z).
+
 
 ```bash
 cd $CMSSW_BASE/src
