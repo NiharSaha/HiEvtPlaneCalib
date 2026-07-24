@@ -40,7 +40,8 @@ if ivars.outfile == 'calib.root':  # still at default -> not user-overridden
     else:
         ivars.outfile = 'calibMC.root'
 
-process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2023)
+process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2023) 
+#process = cms.Process("FlatCalib")
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("CondCore.CondDB.CondDB_cfi")
