@@ -54,9 +54,6 @@ cd CMSSW_13_2_11/src
 cmsenv
 ```
 
-> **Note:** If you are using an existing release (as in this repository), simply `cd` to
-> `CMSSW_13_2_11/src` and run `cmsenv` — do **not** re-run `cmsrel`.
-
 ---
 
 ## Check Out HeavyIon Packages
@@ -66,8 +63,8 @@ Three packages are required:
 | Package | Source |
 |---|---|
 | `HeavyIonsAnalysis/HiEvtPlaneCalib` | GitHub: [NiharSaha/HiEvtPlaneCalib](https://github.com/NiharSaha/HiEvtPlaneCalib) |
-| `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_13_2_X` |
-| `RecoHI/HiEvtPlaneAlgos` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_13_2_X` |
+| `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw/tree/forest_CMSSW_13_2_X), branch `forest_CMSSW_13_2_X` |
+| `RecoHI/HiEvtPlaneAlgos` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw/tree/forest_CMSSW_13_2_X), branch `forest_CMSSW_13_2_X` |
 
 
 
@@ -83,30 +80,15 @@ git config --global user.github your_github_username
 git cms-init
 
 # 1. Clone HiEvtPlaneCalib into the correct CMSSW package path
-mkdir -p HeavyIonsAnalysis
-git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
+git cms-init
+git cms-addpkg RecoHI/HiEvtPlaneAlgos
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_13_2_X --no-tags --depth=1
-git cms-addpkg RecoHI/HiEvtPlaneAlgos
-git checkout FETCH_HEAD -- HeavyIonsAnalysis/EventAnalysis
-git add HeavyIonsAnalysis/EventAnalysis
-git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_13_2_X"
+git checkout FETCH_HEAD -- RecoHI/HiEvtPlaneAlgos HeavyIonsAnalysis/EventAnalysis
+git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 scram b -j8
 
 ```
-
----
-
-## Build the Release
-
-```bash
-cd $CMSSW_BASE/src
-scram b -j8      # use -j<N> matching your available CPU cores
-```
-
-A clean build should produce no errors. Warnings from third-party packages are acceptable.
-
----
 
 ## Working Directory Layout
 
