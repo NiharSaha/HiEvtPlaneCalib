@@ -85,7 +85,7 @@ git cms-addpkg RecoHI/HiEvtPlaneAlgos
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_13_2_X --no-tags --depth=1
 git checkout FETCH_HEAD -- RecoHI/HiEvtPlaneAlgos HeavyIonsAnalysis/EventAnalysis
-git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
+git clone -b EPcalib2023_CMSSW_13_2_X git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 scram b -j8
 
 ```

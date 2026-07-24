@@ -14,7 +14,7 @@ username    = 'nsaha'             # your CMS username
 storagesite = 'T2_US_Purdue'  # a T2 you have write access to
 workArea    = 'crab_EPcalib_PbPb2023'
 data        = 'HIPhysicsRawPrime0'
-tag         = 'July15'
+tag         = 'July18_woEra'
 
 # Dataset and run-range settings — chosen automatically by inputType
 if inputType == 'Data':
