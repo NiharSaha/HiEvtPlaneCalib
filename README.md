@@ -77,7 +77,6 @@ cd $CMSSW_BASE/src
 git config --global user.name 'Firstname Lastname'
 git config --global user.email 'your.email@cern.ch'
 git config --global user.github your_github_username
-git cms-init
 
 # 1. Clone HiEvtPlaneCalib into the correct CMSSW package path
 git cms-init
