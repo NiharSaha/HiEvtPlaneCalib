@@ -179,10 +179,10 @@ crab submit -c crabConfig_CalibTree.py
 After jobs finish, you have to list down all the outputs into a .lis or .txt file to proceed to the next step
 
 ```bash
-if you are working in lxplus, and your output is hieos, then you can simply do
-ls path/*.root > inputFiles_PbPb2023.txt
+#if you are working in lxplus, and your output is hieos, then you can simply do
+ls path/*.root > inputFiles_PbPb2023_CalibTree.txt
 
-if you need to access files via XRootD protocol, you can use the script to list down.
+#if you need to access files via XRootD protocol, you can use the script to list down.
 python3 generate_inputfile_list.py (follow the instruction inside)
 ```
 ---
