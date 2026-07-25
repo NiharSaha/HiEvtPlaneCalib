@@ -117,22 +117,18 @@ test/
 
 ### Prepare the EPCalib headers
 
-`EPCalib.C` is a standalone ROOT macro and cannot use CMSSW headers directly.
-Two header files must be placed inside `EPCalib/` before running Step 2:
+`EPCalib.C` is a standalone ROOT macro and not necessary to run inside CMSSW. However, there is no harm to run it inside CMSSW.
+Two header files must be placed/updated inside `EPCalib/` before running Step 2:
 
 ```bash
 cd $CMSSW_BASE/src/HeavyIonsAnalysis/HiEvtPlaneCalib/test/EPCalib
-
-# 1. HiEvtPlaneList.h — direct copy (no modification needed)
 cp $CMSSW_BASE/src/RecoHI/HiEvtPlaneAlgos/interface/HiEvtPlaneList.h .
-
-# 2. HiEvtPlaneFlatten.h — copy then comment out the CMSSW-specific includes
 cp $CMSSW_BASE/src/RecoHI/HiEvtPlaneAlgos/interface/HiEvtPlaneFlatten.h .
 
-# Comment out the two framework include blocks so ROOT can parse it standalone:
-#   // #include "FWCore/..."
-#   // #include "DataFormats/..."
-# Edit the file manually or use sed (adjust the patterns to match the actual lines):
+# Comment out manually two .h from HiEvtPlaneFlatten.h which are not in use, so ROOT can parse it standalone:
+# // #include "FWCore/..."
+# // #include "DataFormats/..."
+# Or use sed (adjust the patterns to match the actual lines):
 sed -i 's|^#include "FWCore/|// #include "FWCore/|' HiEvtPlaneFlatten.h
 sed -i 's|^#include "DataFormats/|// #include "DataFormats/|' HiEvtPlaneFlatten.h
 
@@ -222,9 +218,9 @@ root -l -b -q "${ARG}"
 
 | File / Directory | Contents |
 |---|---|
-| `RescorTables/Rescor_<range>/` | Event plane resolution correction tables |
-| `ep_<range>.root` | Flattening coefficients (sine/cosine offsets per centrality, vtx, EP) |
-| `offset_<range>.root` | Track-by-track offset corrections |
+| `Rescor/*.dat` | Event plane resolution correction tables |
+| `EP_flat.root` | Flattening coefficients (sine/cosine offsets per centrality, vtx, EP) |
+| `foff_trk.root` | Track-by-track offset corrections |
 
 ---
 
