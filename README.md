@@ -150,26 +150,16 @@ through `calibtree_cfg.py`.
 
 | Input type | Global tag |
 |---|---|
-| **Data** (2024 PbPb) | `141X_dataRun3_Prompt_forHI_NominalCentrality` |
-| **MC** (Hydjet HINPbPbWinter24) | `141X_mcRun3_2024_realistic_HI_v16` |
+| **Data** (2023 PbPb) | `132X_dataRun3_Prompt_v7` |
+| **MC** (Hydjet HINPbPb2023) | `132X_mcRun3_2023_realistic_HI_v10` |
 
 ### 1a. Local run (quick test)
 
 ```bash
 cd $CMSSW_BASE/src/HeavyIonsAnalysis/HiEvtPlaneCalib/test
-
-# Initialise a VOMS proxy (required for xrootd access)
 voms-proxy-init -voms cms
-
-# --- MC (default, 10 000 events) ---
-cmsRun calibtree_cfg.py outfile=calib.root aodType=MiniAOD inputType=MC
-
-# --- Real data ---
-cmsRun calibtree_cfg.py outfile=calib.root aodType=MiniAOD inputType=Data
-
-# --- Single local file test (set MINITEST first) ---
-export MINITEST=/path/to/your/local/file.root
-cmsRun calibtree_cfg.py outfile=calib.root aodType=testMiniAOD repFile=$MINITEST inputType=MC
+For MC: cmsRun calibtree_cfg.py outfile=calib.root aodType=MiniAOD inputType=MC
+For Data: cmsRun calibtree_cfg.py outfile=calib.root aodType=MiniAOD inputType=Data
 ```
 
 ### 1b. Full statistics via CRAB
@@ -180,25 +170,21 @@ Submit via CRAB:
 ```bash
 cd $CMSSW_BASE/src/HeavyIonsAnalysis/HiEvtPlaneCalib/test/crabTemplates
 
-# Edit crabConfig_CalibTree.py:
-#   - Set `user` to your CMS username
-#   - Set `storagesite` to a T2 you have write access to
-#   - For Data: change `dataset` to the HIRun2024A MiniAOD dataset
-#     e.g. /HIPhysicsRawPrime0/HIRun2024A-PromptReco-v1/MINIAOD
-#   - For MC: the default Hydjet dataset is already set
-
-source /cvmfs/cms.cern.ch/crab3/crab.sh   # source CRAB environment
+# Edit crabConfig_CalibTree.py to Set user, storagesite, DataSet, etc 
+source /cvmfs/cms.cern.ch/crab3/crab.sh   
 voms-proxy-init -voms cms
-
 crab submit -c crabConfig_CalibTree.py
 ```
 
-After jobs finish, **merge** all output files into a single `calib.root`:
+After jobs finish, you have to list down all the outputs into a .lis or .txt file to proceed to the next step
 
 ```bash
-hadd calib.root /path/to/crab/output/*.root
-```
+if you are working in lxplus, and your output is hieos, then you can simply do
+ls path/*.root > inputFiles_PbPb2023.txt
 
+if you need to access files via XRootD protocol, you can use the script to list down.
+python3 generate_inputfile_list.py (follow the instruction inside)
+```
 ---
 
 ## Step 2 — Generate Flattening Parameters
