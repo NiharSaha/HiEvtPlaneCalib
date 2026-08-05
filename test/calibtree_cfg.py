@@ -3,7 +3,12 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 import os
 import sys
 import FWCore.ParameterSet.Config as cms
+from Configuration.StandardSequences.Eras import eras
 from Configuration.Eras.Era_Run3_pp_on_PbPb_2023_cff import Run3_pp_on_PbPb_2023
+
+process = cms.Process("FlatCalib", eras.Run3_2023, Run3_pp_on_PbPb_2023) 
+#process = cms.Process("FlatCalib")
+
 
 ivars = VarParsing.VarParsing('analysis')
 
@@ -40,8 +45,7 @@ if ivars.outfile == 'calib.root':  # still at default -> not user-overridden
     else:
         ivars.outfile = 'calibMC.root'
 
-process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2023) 
-#process = cms.Process("FlatCalib")
+
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("CondCore.CondDB.CondDB_cfi")
