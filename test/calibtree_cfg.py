@@ -1,8 +1,9 @@
-import FWCore.ParameterSet.Config as cms
-import FWCore.ParameterSet.VarParsing as VarParsing
 import os
 import sys
 import FWCore.ParameterSet.Config as cms
+import FWCore.ParameterSet.VarParsing as VarParsing
+
+from Configuration.StandardSequences.Eras import eras
 from Configuration.Eras.Era_Run3_pp_on_PbPb_2024_cff import Run3_pp_on_PbPb_2024
 
 ivars = VarParsing.VarParsing('analysis')
