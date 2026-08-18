@@ -88,30 +88,16 @@ git config --global user.github your_github_username
 git cms-init
 
 # 1. Clone HiEvtPlaneCalib into the correct CMSSW package path
-mkdir -p HeavyIonsAnalysis
-git clone git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
+git cms-init
+git cms-addpkg RecoHI/HiEvtPlaneAlgos
 git remote add cmshi https://github.com/CmsHI/cmssw.git
 git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
-git cms-addpkg RecoHI/HiEvtPlaneAlgos
-git checkout FETCH_HEAD -- HeavyIonsAnalysis/EventAnalysis
-git add HeavyIonsAnalysis/EventAnalysis
-git commit -m "Add HeavyIonsAnalysis/EventAnalysis from CmsHI forest_CMSSW_14_1_X"
+git checkout FETCH_HEAD -- RecoHI/HiEvtPlaneAlgos HeavyIonsAnalysis/EventAnalysis
+git clone -b main git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 scram b -j8
 
 ```
 
----
-
-## Build the Release
-
-```bash
-cd $CMSSW_BASE/src
-scram b -j8      # use -j<N> matching your available CPU cores
-```
-
-A clean build should produce no errors. Warnings from third-party packages are acceptable.
-
----
 
 ## Working Directory Layout
 
@@ -141,22 +127,17 @@ test/
 
 ### Prepare the EPCalib headers
 
-`EPCalib.C` is a standalone ROOT macro and cannot use CMSSW headers directly.
-Two header files must be placed inside `EPCalib/` before running Step 2:
+`EPCalib.C` is a standalone ROOT macro and not necessary to run inside CMSSW. However, there is no harm to run it inside CMSSW. Two header files must be placed/updated inside `EPCalib/` before running Step 2:
 
 ```bash
 cd $CMSSW_BASE/src/HeavyIonsAnalysis/HiEvtPlaneCalib/test/EPCalib
-
-# 1. HiEvtPlaneList.h — direct copy (no modification needed)
 cp $CMSSW_BASE/src/RecoHI/HiEvtPlaneAlgos/interface/HiEvtPlaneList.h .
-
-# 2. HiEvtPlaneFlatten.h — copy then comment out the CMSSW-specific includes
 cp $CMSSW_BASE/src/RecoHI/HiEvtPlaneAlgos/interface/HiEvtPlaneFlatten.h .
 
-# Comment out the two framework include blocks so ROOT can parse it standalone:
-#   // #include "FWCore/..."
-#   // #include "DataFormats/..."
-# Edit the file manually or use sed (adjust the patterns to match the actual lines):
+# Comment out manually two .h from HiEvtPlaneFlatten.h which are not in use, so ROOT can parse it standalone:
+# // #include "FWCore/..."
+# // #include "DataFormats/..."
+# Or use sed (adjust the patterns to match the actual lines):
 sed -i 's|^#include "FWCore/|// #include "FWCore/|' HiEvtPlaneFlatten.h
 sed -i 's|^#include "DataFormats/|// #include "DataFormats/|' HiEvtPlaneFlatten.h
 
