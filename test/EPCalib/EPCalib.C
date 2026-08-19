@@ -192,8 +192,9 @@ void EPCalib(unsigned int minRun = 0,
   hcentbin = new TH1D("hcentbin", "centrality bin", 200, 0, 200);
   hvtx = new TH1D("hvtx", "vertex", 200, -30, 30);
   hflatbins = new TH1D("hflatbins", "hflatbins", 100, 0, 100);
-  TFile *tf = new TFile(fnames[0].Data(), "read");
-
+  //TFile *tf = new TFile(fnames[0].Data(), "read");
+  TFile *tf = TFile::Open(fnames[0].Data(), "read");
+ 
   TH1D *fparams = (TH1D *)tf->Get("evtPlaneCalibTree/fparams");
   TH1I *iparams = (TH1I *)tf->Get("evtPlaneCalibTree/iparams");
   minet_ = fparams->GetBinContent(1);
@@ -320,7 +321,8 @@ void EPCalib(unsigned int minRun = 0,
   bool first = true;
   totentries = 0;
   for (int findx = 0; findx < lcnt; findx++) {
-    tf = new TFile(fnames[findx].Data(), "read");
+    //tf = new TFile(fnames[findx].Data(), "read");
+    tf = TFile::Open(fnames[findx].Data(), "read");
     runchk = new TH1I("runchk", "runchk", maxRun - minRun + 1, minRun, maxRun + 1);
     if (tf->IsZombie()) {
       cout << "ZOMBIE:    " << fnames[findx].Data() << endl;
@@ -390,15 +392,28 @@ void EPCalib(unsigned int minRun = 0,
   totentries = 0;
   ncnt = 0;
   for (int findx = 0; findx < lcnt; findx++) {
-    tf = new TFile(fnames[findx].Data(), "read");
-    if (tf->IsZombie()) {
+    //tf = new TFile(fnames[findx].Data(), "read");
+    tf = TFile::Open(fnames[findx].Data(), "read");
+
+    /*if (tf->IsZombie()) {
       cout << "ZOMBIE:    " << fnames[findx].Data() << endl;
       continue;
     }
     if (tf->TestBit(TFile::kRecovered)) {
       cout << "RECOVERED: " << fnames[findx].Data() << endl;
       continue;
+      }*/
+    if (!tf || tf->IsZombie()) {
+      cout << "ZOMBIE:    " << fnames[findx].Data() << endl;
+      if (tf) { tf->Close(); delete tf; }
+      continue;
     }
+    if (tf->TestBit(TFile::kRecovered)) {
+      cout << "RECOVERED: " << fnames[findx].Data() << endl;
+      tf->Close(); delete tf;
+      continue;
+    }
+    
     tree = (TTree *)tf->Get("evtPlaneCalibTree/tree");
     runchk = new TH1I("runchk", "runchk", maxRun - minRun + 1, minRun, maxRun + 1);
     runchk->Reset();
