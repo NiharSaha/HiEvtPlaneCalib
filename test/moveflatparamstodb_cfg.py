@@ -3,10 +3,12 @@ import string
 import subprocess
 import os
 
+#commented for multi run integration!
+'''
 if os.access("flatparms_new.db",os.F_OK)==True:
     ret = subprocess.Popen(['rm','flatparms_new.db'])
     ret.wait()
-    
+'''    
 ivars = VarParsing.VarParsing('standard')
 
 ivars.register ('outputFile',
@@ -50,12 +52,14 @@ process.load("HeavyIonsAnalysis.HiEvtPlaneCalib.moveparmstodb_cfi")
 process.CondDB.connect = "sqlite_file:" + ivars.outputFile
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
+
 process.source = cms.Source("EmptyIOVSource",
     firstValue = cms.uint64(ivars.begin),
     lastValue = cms.uint64(ivars.end),
     timetype = cms.string('runnumber'),
     interval = cms.uint64(1)
 )
+
 
 process.PoolDBOutputService = cms.Service("PoolDBOutputService",
                                           process.CondDB,
