@@ -1,8 +1,8 @@
-# Event Plane Calibration for 2024 PbPb — Step-by-Step Guide
+# Event Plane Calibration for 2025 PbPb — Step-by-Step Guide
 
-**CMSSW:** 14_1_0  
+**CMSSW:** 15_1_0  
 **Package:** `HeavyIonsAnalysis/HiEvtPlaneCalib`  
-**Run range (2024 PbPb data):** 387853 – 388784<br>
+**Run range (2025 PbPb data):** 398954 – 400426<br>
 **EP writeup Run2:** https://twiki.cern.ch/twiki/pub/CMS/SWGuideHeavyIonFlatEvtPlane/EPWriteup.pdf  
 **Run2 setup (AOD):** https://github.com/ssanders50/PbPb_2018  
 **Run2 setup (miniAOD):** https://github.com/ssanders50/CheckEP_11_2_3  
@@ -32,7 +32,7 @@
 ## Prerequisites
 
 - Access to CERN computing infrastructure (lxplus or equivalent)
-- CMSSW 14_1_0 environment (scram arch `el9_amd64_gcc12` or the equivalent for your platform)
+- CMSSW 15_1_0 environment (scram arch `el9_amd64_gcc12` or the equivalent for your platform)
 - Valid CMS VOMS proxy (`voms-proxy-init -voms cms`) — needed for any step that reads from CMS DAS / xrootd
 - CRAB3 client (for large-scale Steps 1 and 4)
 - `conddb_import` available in the CMSSW environment
@@ -49,13 +49,13 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=el9_amd64_gcc12
 
 # Create and initialise a fresh CMSSW release
-cmsrel CMSSW_14_1_0
-cd CMSSW_14_1_0/src
+cmsrel CMSSW_15_1_0
+cd CMSSW_15_1_0/src
 cmsenv
 ```
 
 > **Note:** If you are using an existing release (as in this repository), simply `cd` to
-> `CMSSW_14_1_0/src` and run `cmsenv` — do **not** re-run `cmsrel`.
+> `CMSSW_15_1_0/src` and run `cmsenv` — do **not** re-run `cmsrel`.
 
 ---
 
@@ -66,14 +66,14 @@ Three packages are required:
 | Package | Source |
 |---|---|
 | `HeavyIonsAnalysis/HiEvtPlaneCalib` | GitHub: [NiharSaha/HiEvtPlaneCalib](https://github.com/NiharSaha/HiEvtPlaneCalib) |
-| `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_14_1_X` |
+| `HeavyIonsAnalysis/EventAnalysis` | GitHub: [CmsHI/cmssw](https://github.com/CmsHI/cmssw), branch `forest_CMSSW_15_1_X` |
 | `RecoHI/HiEvtPlaneAlgos` | Official CMSSW repository |
 
 > **Note:** Neither `HeavyIonsAnalysis/HiEvtPlaneCalib` nor `HeavyIonsAnalysis/EventAnalysis`
 > is part of the official CMSSW repository. `git cms-addpkg` will fail for both.
 > `HiEvtPlaneCalib` is cloned directly from GitHub; `EventAnalysis` is sparse-checked out
-> from the `forest_CMSSW_14_1_X` branch of the CmsHI/cmssw fork.
-> If you are using a different CMSSW version, replace `forest_CMSSW_14_1_X` with the
+> from the `forest_CMSSW_15_1_X` branch of the CmsHI/cmssw fork.
+> If you are using a different CMSSW version, replace `forest_CMSSW_15_1_X` with the
 > corresponding branch name (e.g. `forest_CMSSW_X_Y_Z` for version X.Y.Z).
 
 ```bash
@@ -91,7 +91,7 @@ git cms-init
 git cms-init
 git cms-addpkg RecoHI/HiEvtPlaneAlgos
 git remote add cmshi https://github.com/CmsHI/cmssw.git
-git fetch cmshi forest_CMSSW_14_1_X --no-tags --depth=1
+git fetch cmshi forest_CMSSW_15_1_X --no-tags --depth=1
 git checkout FETCH_HEAD -- RecoHI/HiEvtPlaneAlgos HeavyIonsAnalysis/EventAnalysis
 git clone -b main git@github.com:NiharSaha/HiEvtPlaneCalib.git HeavyIonsAnalysis/HiEvtPlaneCalib
 scram b -j8
@@ -155,8 +155,8 @@ through `calibtree_cfg.py`.
 
 | Input type | Global tag |
 |---|---|
-| **Data** (2024 PbPb) | `141X_dataRun3_Prompt_forHI_NominalCentrality` |
-| **MC** (Hydjet HINPbPbWinter24) | `141X_mcRun3_2024_realistic_HI_v16` |
+| **Data** (2025 PbPb) | `Need to update` |
+| **MC** (Hydjet HINPbPbWinter25) | `Need to update` |
 
 ### 1a. Local run (quick test)
 
@@ -216,10 +216,10 @@ cd $CMSSW_BASE/src/HeavyIonsAnalysis/HiEvtPlaneCalib/test
 
 # Variables (adjust paths as needed)
 DEFLOC="."
-CALIBRUNMIN=387853   # Data; use 0 / 999999 for MC
-CALIBRUNMAX=388784
-MINRUN=387853
-MAXRUN=388784
+CALIBRUNMIN=398954   # Data; use 0 / 999999 for MC
+CALIBRUNMAX=400426
+MINRUN=398954
+MAXRUN=400426
 RANGE="${MINRUN}_${MAXRUN}"
 
 # Create output directories / files
@@ -401,5 +401,5 @@ After making such a change, always copy the updated `HiEvtPlaneList.h` and
 
 | Type | DAS dataset path |
 |---|---|
-| **2024 PbPb Data** | `/HIPhysicsRawPrime*/HIRun2024*-PromptReco-v*/MINIAOD` |
-| **2024 PbPb MC** | `/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter24MiniAOD-NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/MINIAODSIM` |
+| **2025 PbPb Data** | `/HIPhysicsRawPrime*/HIRun2025A-PromptReco-v*/MINIAOD` |
+| **2025 PbPb MC** | `Hydjet_Quenched_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter25MiniAOD-NoPU_151X_mcRun3_2025_realistic_HI_v5-v2/MINIAODSIM` |
