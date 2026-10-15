@@ -10,11 +10,11 @@ config = Configuration()
 inputType = 'Data'   # <-- change to 'Data' for real 2024 PbPb calibration
 outfile = 'calibData.root' if inputType == 'Data' else 'calibMC.root'
 
-username        = 'nsaha'             # your CMS username
+username    = 'nsaha'             # your CMS username
 storagesite = 'T2_US_Purdue'  # a T2 you have write access to
-workArea        = 'crab_EPcalib_PbPb2024_withEra'
+workArea    = 'crab_EPcalib_PbPb2024_withEra'
 data        = 'HIPhysicsRawPrime0'
-tag         = 'July15'
+tag         = 'Aug18'
 
 # Dataset and run-range settings — chosen automatically by inputType
 if inputType == 'Data':
