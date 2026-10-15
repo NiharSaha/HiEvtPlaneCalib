@@ -138,10 +138,10 @@ string ressaveName;
 #include "src/rescor.h"
 void EPCalib(unsigned int minRun = 0,
              unsigned int maxRun = 500000,
-             string inList = "inputFiles_PbPb2023_CalibTree.txt",
-             string ssave = "./tmp_EP.root",
-             string epsave = "./EP_flat.root",
-             string foffsave = "./foff_trk.root",
+             string inList = "inputFiles_PbPb2023_MB0_wEra.lis",
+             string ssave = "./tmp_HIMB0.root",
+             string epsave = "./ep_HIMB0.root",
+             string foffsave = "./offset_HIMB0.root",
              string ressave = "Rescor") {
   TH1I *runchk = NULL;
   saveName = ssave;
@@ -194,7 +194,7 @@ void EPCalib(unsigned int minRun = 0,
   hflatbins = new TH1D("hflatbins", "hflatbins", 100, 0, 100);
   //TFile *tf = new TFile(fnames[0].Data(), "read");
   TFile *tf = TFile::Open(fnames[0].Data(), "read");
-  
+
   TH1D *fparams = (TH1D *)tf->Get("evtPlaneCalibTree/fparams");
   TH1I *iparams = (TH1I *)tf->Get("evtPlaneCalibTree/iparams");
   minet_ = fparams->GetBinContent(1);
@@ -323,24 +323,34 @@ void EPCalib(unsigned int minRun = 0,
   for (int findx = 0; findx < lcnt; findx++) {
     //tf = new TFile(fnames[findx].Data(), "read");
     tf = TFile::Open(fnames[findx].Data(), "read");
+
     runchk = new TH1I("runchk", "runchk", maxRun - minRun + 1, minRun, maxRun + 1);
-    if (tf->IsZombie()) {
+    if (!tf || tf->IsZombie()) {
       cout << "ZOMBIE:    " << fnames[findx].Data() << endl;
+      if (tf) { tf->Close(); delete tf; }
       continue;
     }
     if (tf->TestBit(TFile::kRecovered)) {
       cout << "RECOVERED: " << fnames[findx].Data() << endl;
+      tf->Close(); delete tf;
       continue;
     }
     tree = (TTree *)tf->Get("evtPlaneCalibTree/tree");
     runchk->Reset();
     tree->Draw("Run>>runchk", "", "goff");
     cout << fnames[findx].Data() << " - " << runchk->Integral(0, runchk->GetNbinsX()) << endl;
-    if (runchk->Integral(0, runchk->GetNbinsX()) < 100) {
+    /*if (runchk->Integral(0, runchk->GetNbinsX()) < 100) {
       runchk->Delete();
       continue;
     }
-    runchk->Delete();
+    runchk->Delete();*/
+    if (runchk->Integral(0, runchk->GetNbinsX()) < 100) {
+      delete runchk;
+      tf->Close(); delete tf;
+      continue;
+    }
+    delete runchk;
+
     tree->SetBranchAddress("Cent", &centval);
     tree->SetBranchAddress("Vtx", &vtx);
     tree->SetBranchAddress("Run", &runno_);
@@ -357,8 +367,10 @@ void EPCalib(unsigned int minRun = 0,
     tree->SetBranchAddress("cnt", &ptcnt);
     int n = tree->Draw("Run", Form("Run>=%d && Run<=%d", minRun, maxRun), "goff");
     cout<<minRun<<"\t"<<maxRun<<"\t"<<"n = "<<n<<endl;
-    if (n < 100)
+      if (n < 100) {
+      tf->Close(); delete tf;
       continue;
+    }
     nentries = tree->GetEntries();
     cout << "Loop 0: " << tf->GetName() << "\t" << nentries << "\t" << totentries << endl;
     Loop0();
@@ -377,6 +389,7 @@ void EPCalib(unsigned int minRun = 0,
       }
     }
     tf->Close();
+    delete tf;
     if (test && ncnt >= ntest)
       break;
   }
@@ -394,24 +407,37 @@ void EPCalib(unsigned int minRun = 0,
   for (int findx = 0; findx < lcnt; findx++) {
     //tf = new TFile(fnames[findx].Data(), "read");
     tf = TFile::Open(fnames[findx].Data(), "read");
-
-    if (tf->IsZombie()) {
+    
+    /*if (tf->IsZombie()) {
       cout << "ZOMBIE:    " << fnames[findx].Data() << endl;
       continue;
     }
     if (tf->TestBit(TFile::kRecovered)) {
       cout << "RECOVERED: " << fnames[findx].Data() << endl;
       continue;
+    }*/
+
+    if (!tf || tf->IsZombie()) {
+      cout << "ZOMBIE:    " << fnames[findx].Data() << endl;
+      if (tf) { tf->Close(); delete tf; }
+      continue;
     }
+    if (tf->TestBit(TFile::kRecovered)) {
+      cout << "RECOVERED: " << fnames[findx].Data() << endl;
+      tf->Close(); delete tf;
+      continue;
+    }
+
     tree = (TTree *)tf->Get("evtPlaneCalibTree/tree");
     runchk = new TH1I("runchk", "runchk", maxRun - minRun + 1, minRun, maxRun + 1);
     runchk->Reset();
     tree->Draw("Run>>runchk", "", "goff");
     if (runchk->Integral(1, runchk->GetNbinsX()) < 100) {
-      runchk->Delete();
+      delete runchk;
+      tf->Close(); delete tf;
       continue;
     }
-    runchk->Delete();
+    delete runchk;
     tree->SetBranchAddress("Cent", &centval);
     tree->SetBranchAddress("Vtx", &vtx);
     tree->SetBranchAddress("Run", &runno_);
@@ -427,13 +453,16 @@ void EPCalib(unsigned int minRun = 0,
     tree->SetBranchAddress("pt2", &pt2);
     tree->SetBranchAddress("cnt", &ptcnt);
     int n = tree->Draw("Run", Form("Run>=%d && Run<=%d", minRun, maxRun), "goff");
-    if (n < 100)
+    if (n < 100) {
+      tf->Close(); delete tf;
       continue;
+    }
 
     nentries = tree->GetEntries();
     cout << "Loop 1: " << tf->GetName() << "\t" << nentries << "\t" << totentries << endl;
     Loop1();
     tf->Close();
+    delete tf;
     if (test && ncnt >= ntest)
       break;
   }

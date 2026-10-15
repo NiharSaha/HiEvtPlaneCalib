@@ -6,6 +6,8 @@ RescorTables/
 
 # SQLite DB files (large, generated)
 *.db
+# Except the final 2023 run-wise calibration DB (needed for CRAB CheckEP on hammer)
+!test/HeavyIonRPRcd_PbPb2023_Runwise.db
 
 # Log files
 *.log
@@ -25,3 +27,13 @@ RescorTables/
 # Python byte-compiled
 *.pyc
 __pycache__/
+
+# Plot outputs from the plot macros
+*.png
+
+# Lock file created by the Slurm submit scripts
+compile.lock
+
+# CRAB work areas
+test/crabTemplates/crab_*/
+test/crabTemplates/submitted_configs/
