@@ -7,14 +7,15 @@ config = Configuration()
 #  USER SETTINGS — edit these before submitting
 # ============================================================
 # Set inputType to 'MC' or 'Data'
-inputType = 'Data'   # <-- change to 'Data' for real 2023 PbPb calibration
+inputType = 'MC'   # <-- change to 'Data' for real 2023 PbPb calibration
 outfile = 'calibData.root' if inputType == 'Data' else 'calibMC.root'
 
 username    = 'nsaha'             # your CMS username
 storagesite = 'T2_US_Purdue'  # a T2 you have write access to
 workArea    = 'crab_EPcalib_PbPb2023'
-data        = 'HIPhysicsRawPrime0'
-tag         = 'July18_woEra'
+#data        = 'HIPhysicsRawPrime0'
+data        = 'D0_official_MC'
+tag         = 'Oct4_wEra'
 
 # Dataset and run-range settings — chosen automatically by inputType
 if inputType == 'Data':
@@ -25,7 +26,8 @@ if inputType == 'Data':
     lumiMask  = 'Cert_Collisions2023HI_374288_375823_Golden.json'
 else:
     # 2023 PbPb MC: Hydjet MinBias MiniAODSIM
-    dataset   = '/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter23MiniAOD-NoPU_141X_mcRun3_2023_realistic_HI_v14-v2/MINIAODSIM'
+    #dataset   = '/MinBias_PbPb_5p36TeV_Hydjet_v1/sarteaga-MinBias_PbPb_5p36TeV_Hydjet_MINIAOD_v5-45d226c4498e665b330b684cce3e6ab4/USER'
+    dataset   = '/promptD0ToKPi_PT-1_TuneCP5_5p36TeV_pythia8-evtgen/HINPbPbSpring23MiniAOD-132X_mcRun3_2023_realistic_HI_v9-v2/MINIAODSIM'
     runRange  = None
     lumiMask  = None
 # ============================================================
@@ -43,7 +45,7 @@ config.section_('Data')
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
 config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 10
+config.Data.unitsPerJob = 5
 config.Data.totalUnits = -1
 config.Data.outputDatasetTag = f'{data}_{tag}'
 config.Data.outLFNDirBase = f'/store/user/{username}/{workArea}/'
@@ -53,7 +55,8 @@ config.Site.storageSite = storagesite
 
 config.JobType.pyCfgParams = ['noprint', 'aodType=MiniAOD', 'inputType=' + inputType, 'outfile=' + outfile]
 config.Data.inputDataset = dataset
-config.Data.inputDBS = 'global'
+#config.Data.inputDBS = 'global' #Data
+config.Data.inputDBS = 'global' #MC
 
 # Apply run range and lumi mask when set (Data only)
 if runRange is not None:

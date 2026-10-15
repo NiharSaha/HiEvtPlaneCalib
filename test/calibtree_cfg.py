@@ -84,7 +84,7 @@ process.event_filters = cms.Sequence(
     process.phfCoincFilter2Th4
 )
 
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 
@@ -110,9 +110,9 @@ if ivars.aodType == 'MiniAOD':
             )
         )
     else:  # MC
-        # 2024 PbPb MC: Hydjet MinBias MiniAODSIM (HINPbPbWinter24, 5.36 TeV)
+        # 2023 PbPb MC: Hydjet MinBias MiniAODSIM (HINPbPbWinter24, 5.36 TeV)
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/user/sarteaga/MinBias_PbPb_5p36TeV_Hydjet_v1/MinBias_PbPb_5p36TeV_Hydjet_RECODEBUG_v5/231023_223729/0000/stepRECO_1.root'
+            '/store/user/sarteaga/MinBias_PbPb_5p36TeV_Hydjet_v1/MinBias_PbPb_5p36TeV_Hydjet_MINIAOD_v5/231024_131749/0000/miniaod_1.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',
