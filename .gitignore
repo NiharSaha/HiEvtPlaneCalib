@@ -25,3 +25,6 @@ RescorTables/
 # Python byte-compiled
 *.pyc
 __pycache__/
+
+# Lock file created by the Slurm submit scripts
+compile.lock

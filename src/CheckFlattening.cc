@@ -418,11 +418,12 @@ namespace{
 
   	//best vertex
   	double bestvz = -999.9, bestvx = -999.9, bestvy = -999.9;
-  	const reco::Vertex& vtx = (*vertices)[0];
-  	bestvz = vtx.z();
-  	bestvx = vtx.x();
-  	bestvy = vtx.y();
+  	const reco::Vertex& pv = (*vertices)[0];
+  	bestvz = pv.z();
+  	bestvx = pv.x();
+  	bestvy = pv.y();
   	math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
+  	vtx = bestvz;  // member filled into the "Vtx" branch
 
   	flatmaxvtx_ = flatminvtx_ + flatnvtxbins_ * flatdelvtx_;
   	if (bestvz < minvtx_ || bestvz > maxvtx_)
