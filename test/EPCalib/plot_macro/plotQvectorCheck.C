@@ -74,7 +74,7 @@ void drawCMSLabels(TPad* pad) {
     latex.SetTextAlign(11);
     latex.DrawLatex(pad->GetLeftMargin(), yText, "#bf{CMS} #it{Internal}");
     latex.SetTextAlign(31);
-    latex.DrawLatex(1 - pad->GetRightMargin(), yText, "PbPb 5.36 TeV (2024)");
+    latex.DrawLatex(1 - pad->GetRightMargin(), yText, "PbPb 5.36 TeV (2025)");
 }
 
 // Helper to draw the detector label inside the frame (top right)
@@ -119,6 +119,7 @@ int epIndex(const string& name) {
     return -1;
 }
 
+// TODO 2025: the default run list below is from 2024; pass the 2025 runs explicitly
 void plotQvectorCheck(string input = "check_files.lis",
                       vector<unsigned int> runs = {388468, 388622, 388713, 388784},
                       string outputDir = "./QvecPlots",

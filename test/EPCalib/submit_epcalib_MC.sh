@@ -6,8 +6,8 @@
 #SBATCH --partition=cpu
 #SBATCH --qos=standby
 #SBATCH --time=4:00:00
-#SBATCH --output=/scratch/negishi/saha115/EP_calib/EP2024_MC_wEra/logs/EPCalib_MC_%j.log
-#SBATCH --error=/scratch/negishi/saha115/EP_calib/EP2024_MC_wEra/logs/EPCalib_MC_%j.err
+#SBATCH --output=/scratch/negishi/saha115/EP_calib/EP2025_MC/logs/EPCalib_MC_%j.log
+#SBATCH --error=/scratch/negishi/saha115/EP_calib/EP2025_MC/logs/EPCalib_MC_%j.err
 
 # --- SUBMIT MODE: run as ./submit_epcalib_MC.sh on the login node ---
 # Compute nodes cannot see the login node's /tmp, so copy the voms-proxy-init
@@ -23,7 +23,7 @@ if [ -z "$SLURM_JOB_ID" ]; then
     else
         echo "Keeping $HOME_PROXY (~$(( HOME_LEFT / 3600 )) hours left)"
     fi
-    mkdir -p /scratch/negishi/saha115/EP_calib/EP2024_MC_wEra/logs
+    mkdir -p /scratch/negishi/saha115/EP_calib/EP2025_MC/logs
     sbatch "$0"
     exit $?
 fi
@@ -62,7 +62,7 @@ echo "============================================="
 echo "Starting calibration for MC (all runs)"
 echo "============================================="
 
-SCRATCH_BASE=/scratch/negishi/saha115/EP_calib/EP2024_MC_wEra
+SCRATCH_BASE=/scratch/negishi/saha115/EP_calib/EP2025_MC
 OUT_DIR=$SCRATCH_BASE/output
 LOG_DIR=$SCRATCH_BASE/logs
 RESCOR_DIR=$SCRATCH_BASE/Rescor_MC
@@ -72,7 +72,7 @@ mkdir -p $LOG_DIR
 mkdir -p $RESCOR_DIR
 
 # MC has no run-wise calibration: use the full run range (macro defaults 0 - 500000)
-root -b -q "EPCalib.C(0, 500000, \"inputFiles_PbPb2024_MC.lis\", \"${OUT_DIR}/tmp_MC.root\", \"${OUT_DIR}/ep_MC.root\", \"${OUT_DIR}/offset_MC.root\", \"${RESCOR_DIR}\")"
+root -b -q "EPCalib.C(0, 500000, \"inputFiles_PbPb2025_MC.lis\", \"${OUT_DIR}/tmp_MC.root\", \"${OUT_DIR}/ep_MC.root\", \"${OUT_DIR}/offset_MC.root\", \"${RESCOR_DIR}\")"
 
 echo "============================================="
 echo "Finished calibration for MC"
