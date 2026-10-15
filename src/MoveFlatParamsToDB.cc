@@ -322,12 +322,22 @@ MoveFlatParamsToDB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   if(cent40) AddCentralityBins(40.0, 2);
   edm::Service<cond::service::PoolDBOutputService> pool;
   
-  if(pool.isAvailable()){
+  //Commented because of multi IOV.
+  /*if(pool.isAvailable()){
     if(pool->isNewTagRequest(outtag_.data()) ) {
       pool->writeOneIOV(*rpFlat,pool->beginOfTime(),outtag_.data());
     }
+  }*/
+
+  if(pool.isAvailable()){
+    // writeOneIOV automatically creates a new tag if needed, 
+    // or appends if the tag already exists, using the correct run number.
+    pool->writeOneIOV(*rpFlat, iEvent.id().run(), outtag_.data());
   }
+
 }
+
+
 
 
 // ------------ method called once each job just before starting event loop  ------------

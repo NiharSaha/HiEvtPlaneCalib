@@ -12,9 +12,13 @@ import os
 # The redirector for Purdue EOS
 REDIRECTOR = "root://eos.cms.rcac.purdue.edu/"
 # The base path on EOS (starting from /store/)
-BASE_DIR = "/store/user/nsaha/crab_EPcalib_PbPb2024_withEra/HIPhysicsRawPrime0/"
+
+#BASE_DIR = "/store/user/nsaha/crab_EPcalib_PbPb2023/HIPhysicsRawPrime0/HIPhysicsRawPrime0_July18_woEra"
+#BASE_DIR = "/store/user/nsaha/crab_EPcalib_PbPb2023/MinBias_PbPb_5p36TeV_Hydjet_v1/HYDJET_MC_Sept30_wEra"
+BASE_DIR = "/store/user/nsaha/crab_EPcalib_PbPb2023/promptD0ToKPi_PT-1_TuneCP5_5p36TeV_pythia8-evtgen/D0_official_MC_Oct4_wEra"
+
 # Output text file
-OUTPUT_FILE = "inputFiles_MB0_wEra.lis"
+OUTPUT_FILE = "inputFiles_PbPb2023_D0MC.lis"
 
 def get_files_recursive(directory):
     """Recursively lists files using the xrdfs ls command."""
