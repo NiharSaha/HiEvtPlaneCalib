@@ -42,7 +42,10 @@ ivars.register ('inputType',
 
 ivars.parseArguments()
 
-process = cms.Process("check")
+# Same era as calibtree_cfg.py: the pp_on_AA modifier sets the hiEvtPlane cuts
+# (minet, minpt, caloTag, cutEra) used to derive the calibration
+from Configuration.Eras.Era_Run3_pp_on_PbPb_2024_cff import Run3_pp_on_PbPb_2024
+process = cms.Process("check", Run3_pp_on_PbPb_2024)
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("CondCore.CondDB.CondDB_cfi")
 process.load('FWCore.MessageService.MessageLogger_cfi')
@@ -86,7 +89,7 @@ process.event_filters = cms.Sequence(
     process.phfCoincFilterPF3Th5
 )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(ivars.maxEvents) )
 process.MessageLogger.cerr.FwkReport.reportEvery=100
 
 process.CondDB.connect = "sqlite_file:"+ivars.dbfile
@@ -98,10 +101,6 @@ process.PoolDBESSource = cms.ESSource("PoolDBESSource",
                                                          )
                                       )
 process.es_prefer_flatparms = cms.ESPrefer('PoolDBESSource','')
-
-if not ivars.lumifile.isspace()  :
-    import FWCore.PythonUtilities.LumiList as LumiList
-    goodLumiSecs = LumiList.LumiList(filename = ivars.lumifile ).getCMSSWString().split(',')
 
 if ivars.aodType == 'testMiniAOD':
     process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
@@ -137,6 +136,12 @@ elif ivars.aodType == 'MiniAOD':
             )
         )
 
+# Apply the lumi mask (local running; for CRAB use config.Data.lumiMask instead)
+if ivars.lumifile.strip():
+    import FWCore.PythonUtilities.LumiList as LumiList
+    goodLumiSecs = LumiList.LumiList(filename = ivars.lumifile ).getCMSSWString().split(',')
+    process.source.lumisToProcess = cms.untracked.VLuminosityBlockRange(goodLumiSecs)
+
 process.TFileService = cms.Service("TFileService",
         fileName = cms.string(ivars.checkfile)
     )
@@ -167,12 +172,25 @@ process.checkflattening.centralityVariable=process.hiEvtPlane.centralityVariable
 process.checkflattening.vertexTag=process.hiEvtPlane.vertexTag
 process.checkflattening.minvtx=process.hiEvtPlane.flatminvtx
 process.checkflattening.flatnvtxbins=process.hiEvtPlane.flatnvtxbins
-process.checkflattening.latminvtx=process.hiEvtPlane.flatminvtx
+process.checkflattening.flatminvtx=process.hiEvtPlane.flatminvtx
 process.checkflattening.flatdelvtx=process.hiEvtPlane.flatdelvtx
 process.checkflattening.FlatOrder=process.hiEvtPlane.FlatOrder
 process.checkflattening.CentBinCompression=process.hiEvtPlane.CentBinCompression
 process.checkflattening.caloCentRef=process.hiEvtPlane.caloCentRef
 process.checkflattening.caloCentRefWidth=process.hiEvtPlane.caloCentRefWidth
+
+# Per-event tree content for Q-vector / EP validation:
+#   level 0 = raw (_orig), level 1 = recentered (_RecenterOnly), level 2 = flattened (epang)
+process.checkflattening.Branch_Run = cms.untracked.bool(True)
+process.checkflattening.Branch_epang_orig = cms.untracked.bool(True)
+process.checkflattening.Branch_epang_RecenterOnly = cms.untracked.bool(True)
+process.checkflattening.Branch_epsin_orig = cms.untracked.bool(True)
+process.checkflattening.Branch_epcos_orig = cms.untracked.bool(True)
+process.checkflattening.Branch_epsin_RecenterOnly = cms.untracked.bool(True)
+process.checkflattening.Branch_epcos_RecenterOnly = cms.untracked.bool(True)
+process.checkflattening.Branch_sumw = cms.untracked.bool(True)
+process.checkflattening.Branch_Rescor = cms.untracked.bool(False)
+process.checkflattening.Branch_RescorErr = cms.untracked.bool(False)
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 

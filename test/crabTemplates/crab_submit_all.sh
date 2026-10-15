@@ -11,7 +11,7 @@ set -euo pipefail
 # EDIT THESE
 # ------------------------------------------------------------------
 TEMPLATE="crabConfig_CalibTree.py"     # path to your crab config template shown above
-TAG="July15"                      # shared tag for this submission round
+TAG="Aug18"                      # shared tag for this submission round
 VOMS_PROXY_MIN_HOURS=4           # sanity check threshold below
 PD_PREFIX="HIPhysicsRawPrime"
 
