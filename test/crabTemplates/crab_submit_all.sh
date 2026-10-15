@@ -11,14 +11,14 @@ set -euo pipefail
 # EDIT THESE
 # ------------------------------------------------------------------
 TEMPLATE="crabConfig_CalibTree.py"     # path to your crab config template shown above
-TAG="Aug18"                      # shared tag for this submission round
+TAG="Oct15"                      # shared tag for this submission round
 VOMS_PROXY_MIN_HOURS=4           # sanity check threshold below
 PD_PREFIX="HIPhysicsRawPrime"
 
 # Range of trailing index numbers to submit (inclusive).
 # e.g. START=0 END=3 -> HIPhysicsRawPrime0 .. HIPhysicsRawPrime3
 PD_START=0
-PD_END=1
+PD_END=1          # 2025 has HIPhysicsRawPrime0-59; 2024 used 0-1
 # ------------------------------------------------------------------
 
 if [ ! -f "$TEMPLATE" ]; then

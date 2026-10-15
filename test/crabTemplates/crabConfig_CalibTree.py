@@ -7,25 +7,26 @@ config = Configuration()
 #  USER SETTINGS — edit these before submitting
 # ============================================================
 # Set inputType to 'MC' or 'Data'
-inputType = 'Data'   # <-- change to 'Data' for real 2024 PbPb calibration
+inputType = 'Data'   # <-- 'Data' for real 2025 PbPb calibration, 'MC' for Hydjet
 outfile = 'calibData.root' if inputType == 'Data' else 'calibMC.root'
 
 username    = 'nsaha'             # your CMS username
 storagesite = 'T2_US_Purdue'  # a T2 you have write access to
-workArea    = 'crab_EPcalib_PbPb2024_withEra'
-data        = 'HIPhysicsRawPrime0'
-tag         = 'Aug18'
+workArea    = 'crab_EPcalib_PbPb2025'
+data        = 'HIPhysicsRawPrime0'   # 2025 has HIPhysicsRawPrime0-59
+tag         = 'Oct15'
 
 # Dataset and run-range settings — chosen automatically by inputType
 if inputType == 'Data':
-    # 2024 PbPb HIRun2024A certified run range: 387853-388784
-    dataset   = f'/{data}/HIRun2024B-PromptReco-v2/MINIAOD'
-    runRange  = '387853-388784'
-    # Golden JSON for 2024 PbPb HIRun2024A (runs 387853-388784)
-    lumiMask  = 'Cert_Collisions2024_HI_387853_388784_Golden.json'
+    # 2025 PbPb HIRun2025A: dataset has runs 398954-400426, golden JSON certifies 399465-400426
+    dataset   = f'/{data}/HIRun2025A-PromptReco-v1/MINIAOD'
+    runRange  = '399465-400426'
+    # Golden JSON for 2025 PbPb (81 runs, 399465-400426), from
+    # /cvmfs/cms-griddata.cern.ch/cat/metadata/DC/Collisions25HI/latest/
+    lumiMask  = 'Cert_Collisions2025_HI_399465_400426_Golden.json'
 else:
-    # 2024 PbPb MC: Hydjet MinBias MiniAODSIM
-    dataset   = '/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter24MiniAOD-NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/MINIAODSIM'
+    # 2025 PbPb MC: Hydjet Quenched MinBias MiniAODSIM (HINPbPbWinter25)
+    dataset   = '/Hydjet_Quenched_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter25MiniAOD-NoPU_151X_mcRun3_2025_realistic_HI_v5-v2/MINIAODSIM'
     runRange  = None
     lumiMask  = None
 # ============================================================

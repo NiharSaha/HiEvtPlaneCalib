@@ -11,22 +11,22 @@ inputType = 'Data'
 
 username    = 'nsaha'                 # your CMS username
 storagesite = 'T2_US_Purdue'          # a T2 you have write access to
-workArea    = 'crab_EPcheck_PbPb2024'
+workArea    = 'crab_EPcheck_PbPb2025'
 data        = 'HIPhysicsRawPrime0'    # one PD is enough for validation
 tag         = 'Oct15'
 
 # Run-wise DB produced by create_db_runwise.sh (shipped with the job)
-dbfile = '../HeavyIonRPRcd_PbPb2024_Runwise.db'
+dbfile = '../HeavyIonRPRcd_PbPb2025_Runwise.db'
 
 # Dataset and run-range settings — chosen automatically by inputType
 if inputType == 'Data':
-    dataset  = f'/{data}/HIRun2024B-PromptReco-v2/MINIAOD'
-    # Runs used for the run-wise comparison plots (subset of the 20 calibrated runs)
-    runRange = '388468,388622,388713,388784'
-    lumiMask = 'Cert_Collisions2024_HI_387853_388784_Golden.json'
+    dataset  = f'/{data}/HIRun2025A-PromptReco-v1/MINIAOD'
+    # TODO 2025: set to the comparison runs once the 2025 calibrated runs are chosen
+    runRange = '399465-400426'
+    lumiMask = 'Cert_Collisions2025_HI_399465_400426_Golden.json'
 else:
-    # 2024 PbPb MC: Hydjet MinBias MiniAODSIM
-    dataset  = '/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter24MiniAOD-NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/MINIAODSIM'
+    # 2025 PbPb MC: Hydjet Quenched MinBias MiniAODSIM (HINPbPbWinter25)
+    dataset  = '/Hydjet_Quenched_MinBias_TuneCELLO_5p36TeV_pythia8/HINPbPbWinter25MiniAOD-NoPU_151X_mcRun3_2025_realistic_HI_v5-v2/MINIAODSIM'
     runRange = None
     lumiMask = None
 # ============================================================
