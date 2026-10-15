@@ -155,8 +155,14 @@ through `calibtree_cfg.py`.
 
 | Input type | Global tag |
 |---|---|
-| **Data** (2025 PbPb) | `Need to update` |
-| **MC** (Hydjet HINPbPbWinter25) | `Need to update` |
+| **Data** (2025 PbPb) | `151X_dataRun3_Prompt_v1` + HFtowers centrality table `CentralityTable_HFtowers200_DataPbPb_offline_v0` (see note) |
+| **MC** (Hydjet HINPbPbWinter25) | `151X_mcRun3_2025_realistic_HI_v5` |
+
+> **Note (centrality):** the 2025 Prompt GT only contains the express HFtowers table
+> (`CentralityTable_HFtowers200_v0_express`) and no 2025 offline table exists yet. The data
+> configs (`calibtree_cfg.py`, `checkep_cfg.py`) therefore override `HeavyIonRcd`/`HFtowers` with
+> the offline PbPb table used for 2024, whose last IOV (387853) also covers 2025. Both configs must
+> use the same table. Update both if a 2025 offline table becomes available.
 
 ### 1a. Local run (quick test)
 
@@ -188,8 +194,9 @@ cd $CMSSW_BASE/src/HeavyIonsAnalysis/HiEvtPlaneCalib/test/crabTemplates
 # Edit crabConfig_CalibTree.py:
 #   - Set `user` to your CMS username
 #   - Set `storagesite` to a T2 you have write access to
-#   - For Data: change `dataset` to the HIRun2024A MiniAOD dataset
-#     e.g. /HIPhysicsRawPrime0/HIRun2024A-PromptReco-v1/MINIAOD
+#   - For Data: the 2025 dataset /HIPhysicsRawPrime*/HIRun2025A-PromptReco-v1/MINIAOD,
+#     run range 399465-400426 and the 2025 HI golden JSON are already set
+#     (2025 has HIPhysicsRawPrime0-59; crab_submit_all.sh loops over PD_START..PD_END)
 #   - For MC: the default Hydjet dataset is already set
 
 source /cvmfs/cms.cern.ch/crab3/crab.sh   # source CRAB environment

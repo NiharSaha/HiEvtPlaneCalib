@@ -7,8 +7,8 @@
 #SBATCH --partition=cpu
 #SBATCH --qos=standby
 #SBATCH --time=4:00:00
-#SBATCH --output=/scratch/negishi/saha115/EP_calib/EP2024_Runwise_wEra_Aug19/logs/EPCalib_%A_%a.log
-#SBATCH --error=/scratch/negishi/saha115/EP_calib/EP2024_Runwise_wEra_Aug19/logs/EPCalib_%A_%a.err
+#SBATCH --output=/scratch/negishi/saha115/EP_calib/EP2025_Runwise/logs/EPCalib_%A_%a.log
+#SBATCH --error=/scratch/negishi/saha115/EP_calib/EP2025_Runwise/logs/EPCalib_%A_%a.err
 
 cd $SLURM_SUBMIT_DIR
 export X509_USER_PROXY=/home/saha115/myproxy
@@ -35,7 +35,13 @@ if [ -z "$SLURM_ARRAY_TASK_ID" ]; then
     exit 1
 fi
 
-RUNS=(388468 388475 388476 388574 388575 388577 388583 388613 388620 388622 388710 388711 388713 388733 388735 388737 388741 388750 388769 388784)
+# TODO 2025: fill with the selected runs after scanning the 2025 calibData files,
+# and set '#SBATCH --array=0-<N-1>' to match the number of runs
+RUNS=()
+if [ ${#RUNS[@]} -eq 0 ]; then
+    echo "FATAL ERROR: RUNS is empty. Fill in the 2025 run list first."
+    exit 1
+fi
 RUN=${RUNS[$SLURM_ARRAY_TASK_ID]}
 
 echo "============================================="
@@ -58,7 +64,7 @@ echo "============================================="
 ) 9>compile.lock
 # ----------------------------------
 
-SCRATCH_BASE=/scratch/negishi/saha115/EP_calib/EP2024_Runwise_wEra_Sept29
+SCRATCH_BASE=/scratch/negishi/saha115/EP_calib/EP2025_Runwise
 OUT_DIR=$SCRATCH_BASE/output
 LOG_DIR=$SCRATCH_BASE/logs
 RESCOR_DIR=$SCRATCH_BASE/Rescor_${RUN}
@@ -68,7 +74,7 @@ mkdir -p $LOG_DIR
 mkdir -p $RESCOR_DIR
 
 # Execute ROOT (No '+' needed here, ROOT automatically uses the EPCalib_C.so generated above)
-root -b -q "EPCalib.C(${RUN}, ${RUN}, \"inputFiles_PbPb2024_MB01_wEra.lis\", \"${OUT_DIR}/tmp_HIMB01_${RUN}.root\", \"${OUT_DIR}/ep_HIMB01_${RUN}.root\", \"${OUT_DIR}/offset_HIMB01_${RUN}.root\", \"${RESCOR_DIR}\")"
+root -b -q "EPCalib.C(${RUN}, ${RUN}, \"inputFiles_PbPb2025_MB.lis\", \"${OUT_DIR}/tmp_HIMB01_${RUN}.root\", \"${OUT_DIR}/ep_HIMB01_${RUN}.root\", \"${OUT_DIR}/offset_HIMB01_${RUN}.root\", \"${RESCOR_DIR}\")"
 
 echo "============================================="
 echo "Finished calibration for Run: ${RUN}"

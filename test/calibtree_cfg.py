@@ -4,9 +4,9 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 from Configuration.StandardSequences.Eras import eras
-from Configuration.Eras.Era_Run3_pp_on_PbPb_2024_cff import Run3_pp_on_PbPb_2024
+from Configuration.Eras.Era_Run3_pp_on_PbPb_2025_cff import Run3_pp_on_PbPb_2025
 
-process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2024)
+process = cms.Process("FlatCalib", Run3_pp_on_PbPb_2025)
 
 ivars = VarParsing.VarParsing('analysis')
 
@@ -68,12 +68,21 @@ process.load("HeavyIonsAnalysis.HiEvtPlaneCalib.evtplanecalibtree_cfi")
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 # Select global tag based on inputType:
-#   Data: 141X_dataRun3_Prompt_forHI_NominalCentrality
-#   MC:   141X_mcRun3_2024_realistic_HI_v16
+#   Data: 151X_dataRun3_Prompt_v1 (2025 PromptReco GT) + offline HFtowers centrality table below
+#   MC:   151X_mcRun3_2025_realistic_HI_v5 (HINPbPbWinter25 GT)
 if ivars.inputType == 'Data':
-    process.GlobalTag = GlobalTag(process.GlobalTag, '141X_dataRun3_Prompt_forHI_NominalCentrality', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, '151X_dataRun3_Prompt_v1', '')
+    # The 2025 Prompt GT only has the express HFtowers table; no 2025 offline table exists yet.
+    # Use the offline PbPb table used for 2024 (its last IOV starts at 387853 and covers 2025).
+    process.GlobalTag.toGet.extend([
+        cms.PSet(record = cms.string("HeavyIonRcd"),
+                 tag = cms.string("CentralityTable_HFtowers200_DataPbPb_offline_v0"),
+                 connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+                 label = cms.untracked.string("HFtowers")
+                 )
+    ])
 else:
-    process.GlobalTag = GlobalTag(process.GlobalTag, '141X_mcRun3_2024_realistic_HI_v16', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, '151X_mcRun3_2025_realistic_HI_v5', '')
 
 process.load('RecoHI.HiCentralityAlgos.HiCentrality_cfi')
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
@@ -107,9 +116,9 @@ if ivars.aodType == 'testMiniAOD':
 
 if ivars.aodType == 'MiniAOD':
     if ivars.inputType == 'Data':
-        # 2024 PbPb real data: HIRun2024A HIPhysicsRawPrime0 MINIAOD PromptReco-v1
+        # 2025 PbPb real data: HIRun2025A HIPhysicsRawPrime0 MINIAOD PromptReco-v1 (golden run 400243)
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/853/00000/3b1c9ce6-fd74-4ccc-8940-65be089adf5b.root'
+            '/store/hidata/HIRun2025A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/400/243/00000/9f217f14-1ddf-41e7-99a3-aebc9a55a294.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',
@@ -117,12 +126,9 @@ if ivars.aodType == 'MiniAOD':
             )
         )
     else:  # MC
-        # 2024 PbPb MC: Hydjet MinBias MiniAODSIM (HINPbPbWinter24, 5.36 TeV)
+        # 2025 PbPb MC: Hydjet Quenched MinBias MiniAODSIM (HINPbPbWinter25, 5.36 TeV)
         process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/6b0edb76-0f4e-49e4-a8b4-7d614b72e92f.root',
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/00e1cc61-b738-47ce-8d89-e0e1a7290212.root',
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/04840c4e-7732-4846-bbbd-4940bfdcb8cd.root',
-            '/store/mc/HINPbPbWinter24MiniAOD/Hydjet_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_141X_mcRun3_2024_realistic_HI_v14-v2/2810000/1230138a-d4f6-4828-a2f7-adf024d0d190.root'
+            '/store/mc/HINPbPbWinter25MiniAOD/Hydjet_Quenched_MinBias_TuneCELLO_5p36TeV_pythia8/MINIAODSIM/NoPU_151X_mcRun3_2025_realistic_HI_v5-v2/2560000/e41e63ed-8934-4fe4-829e-8f5e40ee7ad7.root'
             ),
             inputCommands=cms.untracked.vstring(
                 'keep *',

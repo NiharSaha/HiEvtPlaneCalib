@@ -61,7 +61,7 @@ void drawCMSLabels(TPad* pad) {
     latex.SetTextAlign(11);
     latex.DrawLatex(pad->GetLeftMargin(), yText, "#bf{CMS} #it{Internal}");
     latex.SetTextAlign(31);
-    latex.DrawLatex(1 - pad->GetRightMargin(), yText, "PbPb 5.36 TeV (2024)");
+    latex.DrawLatex(1 - pad->GetRightMargin(), yText, "PbPb 5.36 TeV (2025)");
 }
 
 // Helper to draw the detector / run label inside the frame (top right)
@@ -74,8 +74,9 @@ void drawPadLabel(TPad* pad, string label) {
     latex.DrawLatex(1 - pad->GetRightMargin() - 0.03, 1 - pad->GetTopMargin() - 0.03, label.c_str());
 }
 
+// TODO 2025: the default run list below is from 2024; pass the 2025 runs explicitly
 void plotEPRunComparison(vector<string> runs = {"388468", "388713", "388750", "388784"}, 
-                         string inputDir = "/scratch/negishi/saha115/EP_calib/EP2024_Runwise_wEra_Sept29/output", 
+                         string inputDir = "/scratch/negishi/saha115/EP_calib/EP2025_Runwise/output", 
                          string outputDir = "./EPplots_RunWise") {
     
     if (runs.size() != 4) {
