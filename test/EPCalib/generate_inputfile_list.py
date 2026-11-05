@@ -6,10 +6,10 @@ import os
 REDIRECTOR = "root://eos.cms.rcac.purdue.edu/"
 # The base path on EOS (starting from /store/)
 
-BASE_DIR = "/store/user/nsaha/crab_EPcalib_PbPb2024_withEra/HIPhysicsRawPrime1/HIPhysicsRawPrime1_Aug18"
+BASE_DIR = "/store/user/nsaha/crab_EPcheck_PbPb2024/HIPhysicsRawPrime0/HIPhysicsRawPrime0_check_Nov4/"
 
 # Output text file
-OUTPUT_FILE = "inputFiles_PbPb2024_MB1_wEra.lis"
+OUTPUT_FILE = "Check_EP2024.lis"
 
 def get_files_recursive(directory):
     """Recursively lists files using the xrdfs ls command."""

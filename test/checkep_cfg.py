@@ -194,9 +194,12 @@ process.checkflattening.Branch_RescorErr = cms.untracked.bool(False)
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 
+# centralityBin must be rerun with the GT centrality table, as in calibtree_cfg.py.
+# Without it the centralityBin stored in MiniAOD (PromptReco table) is used, which
+# puts events in different centrality bins than the calibration and breaks recentering.
 if ivars.aodType == 'testMiniAOD' or ivars.aodType == 'MiniAOD':
     if ivars.inputType == 'Data':
-        process.p = cms.Path(process.HLT_filters * process.event_filters * process.hiEvtPlane * process.hiEvtPlaneFlat * process.checkflattening)
+        process.p = cms.Path(process.HLT_filters * process.event_filters * process.centralityBin * process.hiEvtPlane * process.hiEvtPlaneFlat * process.checkflattening)
     else:
-        process.p = cms.Path(process.event_filters * process.hiEvtPlane * process.hiEvtPlaneFlat * process.checkflattening)
+        process.p = cms.Path(process.event_filters * process.centralityBin * process.hiEvtPlane * process.hiEvtPlaneFlat * process.checkflattening)
 

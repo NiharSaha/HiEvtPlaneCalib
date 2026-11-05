@@ -119,7 +119,7 @@ int epIndex(const string& name) {
     return -1;
 }
 
-void plotQvectorCheck(string input = "check_files.lis",
+void plotQvectorCheck(string input = "Check_EP2024.lis",
                       vector<unsigned int> runs = {388468, 388622, 388713, 388784},
                       string outputDir = "./QvecPlots",
                       double centMax = 80.,
